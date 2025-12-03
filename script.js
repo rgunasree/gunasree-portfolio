@@ -377,7 +377,11 @@ const AIModule = (() => {
                 body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
 
-            if (!response.ok) throw new Error(`Status: ${response.status}`);
+            if (!response.ok) {
+                const errText = await response.text();
+                console.error('API Error Details:', errText);
+                throw new Error(`Status: ${response.status}`);
+            }
             const data = await response.json();
             const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
             if (!text) throw new Error('Empty response');
@@ -425,7 +429,11 @@ const AIModule = (() => {
                 })
             });
 
-            if (!response.ok) throw new Error(`API_${response.status}`);
+            if (!response.ok) {
+                const errText = await response.text();
+                console.error('Bio API Error:', errText);
+                throw new Error(`API_${response.status}`);
+            }
             const data = await response.json();
             const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Error generating bio.";
 
@@ -497,8 +505,35 @@ const ChatModule = (() => {
     const fallbackKnowledge = {
         'fairassess': `**FairAssess.ai** - Bias detection engine. +52% diverse applicants.`,
         'rag': `**RAG Experience:** Built pipelines at Ausweg (72% accuracy boost) using FAISS & LangChain.`,
-        'skills': `**Skills:** Python, RAG, LLMs, SQL, Next.js, Docker.`
+        'skills': `**Skills:** Python, RAG, LLMs, SQL, Next.js, Docker.`,
+        'achievements': `**Top Achievements:**\n• Built EMS Chatbot (Auto-support)\n• 72% RAG Accuracy Boost\n• FairAssess.ai (Bias Detection)`,
+        'hire': `**Why Hire Her?**\n• Proven RAG & LLM expertise\n• Full-stack (Next.js + Python)\n• Results-driven (Metrics-focused)`,
+        'portfolio': `**About this Website:**\n• Built with **Vanilla JS, Tailwind CSS, & Three.js**\n• **No Frameworks** (Lightweight)\n• Features: **Gemini 2.0 Flash** for AI, 3D Background, Glassmorphism.`,
+        'website': `**About this Website:**\n• Built with **Vanilla JS, Tailwind CSS, & Three.js**\n• **No Frameworks** (Lightweight)\n• Features: **Gemini 2.0 Flash** for AI, 3D Background, Glassmorphism.`,
+        'about': `**About Gunasree:**\n• **AI Engineer** with 1+ years exp.\n• **8.1 CGPA**\n• Expert in **LLMs, RAG, & IoT**.\n• Passionate about building scalable AI systems.`,
+        'gunasree': `**About Gunasree:**\n• **AI Engineer** with 1+ years exp.\n• **8.1 CGPA**\n• Expert in **LLMs, RAG, & IoT**.\n• Passionate about building scalable AI systems.`
     };
+
+    const PORTFOLIO_CONTEXT = `
+    WEBSITE TECH STACK:
+    - Core: Vanilla JavaScript (No heavy frameworks like React/Angular for the main site).
+    - Styling: Tailwind CSS (Utility-first).
+    - 3D Graphics: Three.js (Interactive background).
+    - AI Integration: Google Gemini 2.0 Flash API (Bio Generator, Deep Dive, Chatbot).
+    - Hosting: Localhost / Vercel.
+    - Key Features: Glassmorphism UI, Real-time AI analysis, Typewriter effects, Scroll-triggered animations.
+    `;
+
+    const PERSONAL_CONTEXT = `
+    PROFILE:
+    - Name: Gunasree R
+    - Role: AI Engineer
+    - Experience: 1+ Years (Ausweg Info Control, Corizo)
+    - Education: 8.1 CGPA
+    - Key Skills: LLMs, RAG Pipelines, IoT Analytics, Python, Next.js, Docker.
+    - Key Projects: FairAssess.ai (Bias Detection), Resume Matcher (RAG), WhatShouldIWatch (Recommender).
+    - Soft Skills: Leadership, Communication.
+    `;
 
     const getFallbackResponse = (msg) => {
         const lower = msg.toLowerCase();
@@ -549,7 +584,25 @@ const ChatModule = (() => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{ parts: [{ text: text }] }],
-                    systemInstruction: { parts: [{ text: `You are Hedgy. Be brief. Base answer on: ${context}` }] }
+                    systemInstruction: {
+                        parts: [{
+                            text: `You are Hedgy 🦔, the AI assistant for Gunasree's portfolio. 
+                    
+                    CONTEXT:
+                    ${PORTFOLIO_CONTEXT}
+                    
+                    ${PERSONAL_CONTEXT}
+                    
+                    RESUME DATA:
+                    ${JSON.stringify(PortfolioData)}
+                    
+                    INSTRUCTIONS:
+                    - Be helpful, professional, yet slightly witty (you are a hedgehog).
+                    - Keep answers SHORT (max 2-3 sentences).
+                    - If asked about the website, explain the tech stack.
+                    - If asked about Gunasree, use the Personal Context.
+                    ` }]
+                    }
                 })
             });
 
