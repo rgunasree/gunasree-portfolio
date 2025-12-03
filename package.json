@@ -1,7 +1,7 @@
 {
-  "name": "gunasree-portfolio-testsprite",
+  "name": "gunasree-portfolio",
   "version": "1.0.0",
-  "description": "Visual regression testing with TestSprite for Gunasree R's portfolio",
+  "description": "Professional Portfolio of Gunasree R - AI Engineer",
   "main": "index.js",
   "scripts": {
     "dev": "python3 -m http.server 8080",
