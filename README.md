@@ -13,6 +13,54 @@ A modern, interactive portfolio website showcasing Gunasree R's work as an AI En
 - **AI-Powered**: Dynamic content generation and project analysis
 - **Scroll Snap**: Smooth section-based navigation
 
+## 🛠️ Installation & Setup
+
+### 1. Clone the Repository
+```bash
+git clone https://github.com/rgunasree/gunasree-portfolio.git
+cd gunasree-portfolio
+```
+
+### 2. Configure API Key
+1.  Copy `config.example.js` to `config.js`:
+    ```bash
+    cp config.example.js config.js
+    ```
+2.  Get a free API Key from [Google AI Studio](https://aistudio.google.com/).
+3.  Open `config.js` and paste your key:
+    ```javascript
+    const CONFIG = {
+        API_KEY: 'YOUR_GEMINI_API_KEY',
+        // ...
+    };
+    ```
+
+### 3. Run Locally
+Since this project uses ES6 modules, you need a local server.
+-   **VS Code**: Install "Live Server" extension and click "Go Live".
+-   **Python**:
+    ```bash
+    python3 -m http.server 8080
+    ```
+    Then open `http://localhost:8080`.
+
+## 🚀 Deployment (Vercel)
+
+To deploy securely **without exposing your API key**:
+
+1.  Import this repo to [Vercel](https://vercel.com/).
+2.  **Add Environment Variable**:
+    -   Key: `GEMINI_API_KEY`
+    -   Value: `Your_Actual_API_Key`
+3.  **Override Build Command**:
+    -   Go to **Settings > General > Build & Development Settings**.
+    -   Toggle **Override** for **Build Command**.
+    -   Enter:
+        ```bash
+        echo "const CONFIG = { API_KEY: '$GEMINI_API_KEY', GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', ANIMATION_SPEED: 15, SCROLL_THRESHOLD: 0.1 };" > config.js
+        ```
+4.  Deploy! Vercel will generate the secure config file during build.
+
 ## 🛠 Tech Stack
 
 - **Frontend**: HTML5, CSS3, JavaScript (ES6+)
