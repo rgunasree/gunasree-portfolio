@@ -54,8 +54,8 @@ To deploy securely **without exposing your API key**:
     -   Value: `Your_Actual_API_Key`
 3.  **Override Build Command**:
     -   Go to **Settings > General > Build & Development Settings**.
-    -   Toggle **Override** for **Build Command**.
-    -   Enter:
+    -   Toggle **Override** for **Build Command** (Leave "Output Directory" default).
+    -   Enter this in the **Build Command** box:
         ```bash
         echo "const CONFIG = { API_KEY: '$GEMINI_API_KEY', GEMINI_API_URL: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent', ANIMATION_SPEED: 15, SCROLL_THRESHOLD: 0.1 };" > config.js
         ```
