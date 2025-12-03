@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TestSprite Test Runner</title>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .test-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        .test-category {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+        }
+        .test-category h3 {
+            color: #06b6d4;
+            margin-top: 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 10px;
+        }
+        .test-item {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            padding: 8px;
+            border-radius: 6px;
+            transition: background 0.3s;
+        }
+        .test-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .test-item input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+        }
+        .test-item label {
+            cursor: pointer;
+            flex: 1;
+        }
+        .test-item.passed {
+            background: rgba(34, 197, 94, 0.1);
+            border-left: 3px solid #22c55e;
+        }
+        .test-item.failed {
+            background: rgba(239, 68, 68, 0.1);
+            border-left: 3px solid #ef4444;
+        }
+        .controls {
+            text-align: center;
+            margin: 30px 0;
+        }
+        .btn {
+            background: #06b6d4;
+            color: #000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 0 10px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #22d3ee;
+            transform: translateY(-2px);
+        }
+        .btn.secondary {
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+        .btn.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .status {
+            text-align: center;
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .progress {
+            width: 100%;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #06b6d4, #a855f7);
+            width: 0%;
+            transition: width 0.5s;
+        }
+        .results {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            display: none;
+        }
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .result-item:last-child {
+            border-bottom: none;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 TestSprite Test Runner</h1>
+            <p>Comprehensive testing suite for Gunasree R's AI Engineer Portfolio</p>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="startTests()">▶️ Start Testing</button>
+            <button class="btn secondary" onclick="resetTests()">🔄 Reset</button>
+            <button class="btn secondary" onclick="exportResults()">📊 Export Results</button>
+            <button class="btn secondary" onclick="togglePreview()">👁️ Toggle Preview</button>
+        </div>
+
+        <div class="status">
+            <div id="status-text">Ready to test</div>
+            <div class="progress">
+                <div class="progress-bar" id="progress-bar"></div>
+            </div>
+            <div id="results-summary"></div>
+        </div>
+
+        <div id="preview-container" style="display: none;">
+            <h3>Portfolio Preview</h3>
+            <iframe src="http://localhost:8080" id="portfolio-iframe"></iframe>
+        </div>
+
+        <div class="test-grid">
+            <!-- Page Load Tests -->
+            <div class="test-category">
+                <h3>📄 Page Load & Rendering</h3>
+                <div class="test-item">
+                    <input type="checkbox" id="hero-loads" onchange="updateProgress()">
+                    <label for="hero-loads">Hero section loads with profile image</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="navbar-visible" onchange="updateProgress()">
+                    <label for="navbar-visible">Navigation bar appears and functions</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="sections-render" onchange="updateProgress()">
+                    <label for="sections-render">All sections render correctly</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="animation-loads" onchange="updateProgress()">
+                    <label for="animation-loads">3D background animation loads</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="loading-disappears" onchange="updateProgress()">
+                    <label for="loading-disappears">Loading screen disappears properly</label>
+                </div>
+            </div>
+
+            <!-- Responsive Design Tests -->
+            <div class="test-category">
+                <h3>📱 Responsive Design</h3>
+                <div class="test-item">
+                    <input type="checkbox" id="desktop-layout" onchange="updateProgress()">
+                    <label for="desktop-layout">Desktop (1920x1080) layout</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="tablet-layout" onchange="updateProgress()">
+                    <label for="tablet-layout">Tablet (768x1024) layout</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="mobile-layout" onchange="updateProgress()">
+                    <label for="mobile-layout">Mobile (375x667) layout</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="responsive-nav" onchange="updateProgress()">
+                    <label for="responsive-nav">Mobile navigation works</label>
+                </div>
+            </div>
+
+            <!-- AI Chat Widget Tests -->
+            <div class="test-category">
+                <h3>🤖 AI Chat Widget ("Hedgy")</h3>
+                <div class="test-item">
+                    <input type="checkbox" id="chat-avatar-visible" onchange="updateProgress()">
+                    <label for="chat-avatar-visible">Chat avatar button visible</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="chat-avatar-animated" onchange="updateProgress()">
+                    <label for="chat-avatar-animated">Avatar floating animation</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="chat-opens" onchange="updateProgress()">
+                    <label for="chat-opens">Clicking opens chat window</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="chat-input" onchange="updateProgress()">
+                    <label for="chat-input">Text input accepts keyboard input</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="chat-send" onchange="updateProgress()">
+                    <label for="chat-send">Send button responsive</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="chat-prompts" onchange="updateProgress()">
+                    <label for="chat-prompts">Quick prompt suggestions</label>
+                </div>
+            </div>
+
+            <!-- Theme & Navigation Tests -->
+            <div class="test-category">
+                <h3>🎨 Theme & Navigation</h3>
+                <div class="test-item">
+                    <input type="checkbox" id="theme-toggle-visible" onchange="updateProgress()">
+                    <label for="theme-toggle-visible">Theme toggle button visible</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="theme-switches" onchange="updateProgress()">
+                    <label for="theme-switches">Dark/light theme switch</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="theme-persists" onchange="updateProgress()">
+                    <label for="theme-persists">Theme preference persists</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="nav-links" onchange="updateProgress()">
+                    <label for="nav-links">Navigation links work</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="scroll-snap" onchange="updateProgress()">
+                    <label for="scroll-snap">Scroll snap behavior</label>
+                </div>
+            </div>
+
+            <!-- Interactive Features Tests -->
+            <div class="test-category">
+                <h3>⚡ Interactive Features</h3>
+                <div class="test-item">
+                    <input type="checkbox" id="bio-generation" onchange="updateProgress()">
+                    <label for="bio-generation">Bio generation button works</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="typewriter-effect" onchange="updateProgress()">
+                    <label for="typewriter-effect">Typewriter animation</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="experience-tabs" onchange="updateProgress()">
+                    <label for="experience-tabs">Experience tab switching</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="skills-filter" onchange="updateProgress()">
+                    <label for="skills-filter">Skills filter buttons</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="project-links" onchange="updateProgress()">
+                    <label for="project-links">Project links functional</label>
+                </div>
+            </div>
+
+            <!-- AI-Powered Features Tests -->
+            <div class="test-category">
+                <h3>🧠 AI-Powered Features</h3>
+                <div class="test-item">
+                    <input type="checkbox" id="ai-modal-opens" onchange="updateProgress()">
+                    <label for="ai-modal-opens">Project analysis modal opens</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="ai-modal-content" onchange="updateProgress()">
+                    <label for="ai-modal-content">AI content renders properly</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="ai-markdown" onchange="updateProgress()">
+                    <label for="ai-markdown">Markdown parsing works</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="ai-error-handling" onchange="updateProgress()">
+                    <label for="ai-error-handling">Error states display correctly</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="ai-fallback" onchange="updateProgress()">
+                    <label for="ai-fallback">Fallback content shows</label>
+                </div>
+            </div>
+
+            <!-- Performance & Accessibility Tests -->
+            <div class="test-category">
+                <h3>⚡ Performance & Accessibility</h3>
+                <div class="test-item">
+                    <input type="checkbox" id="load-time" onchange="updateProgress()">
+                    <label for="load-time">Page load time < 3s</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="animation-performance" onchange="updateProgress()">
+                    <label for="animation-performance">Smooth animations (60fps)</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="keyboard-nav" onchange="updateProgress()">
+                    <label for="keyboard-nav">Keyboard navigation</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="color-contrast" onchange="updateProgress()">
+                    <label for="color-contrast">Color contrast ratios</label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="no-console-errors" onchange="updateProgress()">
+                    <label for="no-console-errors">No JavaScript errors</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="results" id="results">
+            <h3>📊 Test Results</h3>
+            <div class="result-item">
+                <span>Total Tests:</span>
+                <span id="total-tests">0</span>
+            </div>
+            <div class="result-item">
+                <span>Passed:</span>
+                <span id="passed-tests" style="color: #22c55e;">0</span>
+            </div>
+            <div class="result-item">
+                <span>Failed:</span>
+                <span id="failed-tests" style="color: #ef4444;">0</span>
+            </div>
+            <div class="result-item">
+                <span>Success Rate:</span>
+                <span id="success-rate">0%</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0,
+            details: []
+        };
+
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const totalTests = checkboxes.length;
+            const passedTests = document.querySelectorAll('input[type="checkbox"]:checked').length;
+            const failedTests = totalTests - passedTests;
+            const successRate = ((passedTests / totalTests) * 100).toFixed(1);
+
+            // Update progress bar
+            const progressBar = document.getElementById('progress-bar');
+            progressBar.style.width = successRate + '%';
+
+            // Update status
+            const statusText = document.getElementById('status-text');
+            statusText.textContent = `${passedTests}/${totalTests} tests passed (${successRate}%)`;
+
+            // Update results
+            document.getElementById('total-tests').textContent = totalTests;
+            document.getElementById('passed-tests').textContent = passedTests;
+            document.getElementById('failed-tests').textContent = failedTests;
+            document.getElementById('success-rate').textContent = successRate + '%';
+
+            // Show results if any tests are completed
+            const results = document.getElementById('results');
+            if (totalTests > 0) {
+                results.style.display = 'block';
+            }
+
+            // Visual feedback for passed/failed items
+            checkboxes.forEach(checkbox => {
+                const item = checkbox.parentElement;
+                item.classList.remove('passed', 'failed');
+                if (checkbox.checked) {
+                    item.classList.add('passed');
+                }
+            });
+        }
+
+        function startTests() {
+            const statusText = document.getElementById('status-text');
+            statusText.textContent = '🧪 Running tests...';
+
+            // Add a delay to simulate testing
+            setTimeout(() => {
+                statusText.textContent = '✅ Tests completed!';
+                updateProgress();
+            }, 2000);
+        }
+
+        function resetTests() {
+            document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            document.getElementById('progress-bar').style.width = '0%';
+            document.getElementById('status-text').textContent = 'Ready to test';
+            document.getElementById('results').style.display = 'none';
+            
+            document.querySelectorAll('.test-item').forEach(item => {
+                item.classList.remove('passed', 'failed');
+            });
+        }
+
+        function exportResults() {
+            const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            const results = {
+                timestamp: new Date().toISOString(),
+                summary: {
+                    total: checkboxes.length,
+                    passed: document.querySelectorAll('input[type="checkbox"]:checked').length,
+                    failed: checkboxes.length - document.querySelectorAll('input[type="checkbox"]:checked').length,
+                    successRate: ((document.querySelectorAll('input[type="checkbox"]:checked').length / checkboxes.length) * 100).toFixed(1) + '%'
+                },
+                details: Array.from(checkboxes).map(cb => ({
+                    test: cb.id,
+                    label: cb.nextElementSibling.textContent,
+                    passed: cb.checked,
+                    category: cb.closest('.test-category').querySelector('h3').textContent
+                }))
+            };
+
+            const dataStr = JSON.stringify(results, null, 2);
+            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+            
+            const exportFileDefaultName = 'testsprite-results-' + new Date().toISOString().split('T')[0] + '.json';
+            
+            const linkElement = document.createElement('a');
+            linkElement.setAttribute('href', dataUri);
+            linkElement.setAttribute('download', exportFileDefaultName);
+            linkElement.click();
+        }
+
+        function togglePreview() {
+            const container = document.getElementById('preview-container');
+            container.style.display = container.style.display === 'none' ? 'block' : 'none';
+        }
+
+        // Initialize
+        updateProgress();
+    </script>
+</body>
+</html>

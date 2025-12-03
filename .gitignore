@@ -38,6 +38,14 @@ Thumbs.db
 *.tmp
 *.temp
 
-# API keys (safety)
 *API_KEY*
 *apikey*
+
+# Testing Artifacts
+test-results/
+screenshots/
+baselines/
+*.report.html
+
+# Secrets
+config.js
