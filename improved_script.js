@@ -1,15 +1,12 @@
 // ==========================================
-// PORTFOLIO APPLICATION - IMPROVED VERSION
+// PORTFOLIO APPLICATION - FIXED VERSION
 // ==========================================
 
 // --- CONFIGURATION & CONSTANTS ---
 const CONFIG = {
-    // 🔑 GEMINI API KEY CONFIGURATION:
-    // Your API key is configured below. If you need to change it, replace the value here.
-    // Get new keys from: https://makersuite.google.com/app/apikey
-    API_KEY: "AIzaSyAV4XQvgWKeQnkEY8F_TS-3wLaOiD0bVxg", // ✅ CONFIGURED: Your Gemini API key
-
-    GEMINI_API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+    // 🔑 GEMINI API KEY:
+    API_KEY: "AIzaSyAV4XQvgWKeQnkEY8F_TS-3wLaOiD0bVxg",
+    GEMINI_API_URL: "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent",
     ANIMATION_SPEED: 25,
     CHART_HEIGHT: 300,
     SCROLL_THRESHOLD: 0.5,
@@ -18,7 +15,7 @@ const CONFIG = {
     FALLBACK_DELAY: 500
 };
 
-// DOM Selectors - Centralized for maintainability
+// DOM Selectors
 const SELECTORS = {
     mainScroll: '#main-scroll',
     navbar: '#navbar',
@@ -39,7 +36,8 @@ const SELECTORS = {
     userInput: '#user-input',
     suggestionsContainer: '#suggestions-container',
     canvasContainer: '#canvas-container',
-    loading: '#loading'
+    loading: '#loading',
+    bioButton: '#bio-btn' // Added ID for the button
 };
 
 // --- DATA MODULE ---
@@ -133,28 +131,46 @@ const PortfolioData = (() => {
     return { experienceData, projects, skills };
 })();
 
+// --- THEME MODULE ---
+const ThemeModule = (() => {
+    const toggleTheme = () => {
+        const html = document.documentElement;
+        const currentTheme = html.getAttribute('data-theme');
+        const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+        html.setAttribute('data-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        updateIcon(newTheme);
+    };
+
+    const updateIcon = (theme) => {
+        const icon = document.getElementById('theme-icon');
+        if (!icon) return;
+        if (theme === 'light') {
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>';
+        } else {
+            icon.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>';
+        }
+    };
+
+    const initTheme = () => {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        updateIcon(savedTheme);
+    };
+
+    return { toggleTheme, initTheme };
+})();
+window.toggleTheme = ThemeModule.toggleTheme;
+
 // --- UTILITY FUNCTIONS ---
 const Utils = (() => {
-    /**
-     * Safely gets an element by ID with error handling
-     * @param {string} id - Element ID (with or without #)
-     * @returns {HTMLElement|null} - The element or null if not found
-     */
     const getElement = (id) => {
         const element = document.getElementById(id.replace('#', ''));
-        if (!element) {
-            console.warn(`Element with ID "${id}" not found`);
-            return null;
-        }
+        if (!element) console.warn(`Element with ID "${id}" not found`);
         return element;
     };
 
-    /**
-     * Debounces a function call
-     * @param {Function} func - Function to debounce
-     * @param {number} wait - Wait time in milliseconds
-     * @returns {Function} - Debounced function
-     */
     const debounce = (func, wait) => {
         let timeout;
         return (...args) => {
@@ -163,11 +179,6 @@ const Utils = (() => {
         };
     };
 
-    /**
-     * Parses markdown text to HTML
-     * @param {string} text - Markdown text
-     * @returns {string} - HTML string
-     */
     const parseMarkdown = (text) => {
         if (!text) return '';
         return text
@@ -177,25 +188,15 @@ const Utils = (() => {
             .replace(/\n/g, '<br>');
     };
 
-    /**
-     * Escapes single quotes for use in HTML attributes
-     * @param {string} str - String to escape
-     * @returns {string} - Escaped string
-     */
     const escapeQuotes = (str) => str.replace(/'/g, "\\'");
-
     return { getElement, debounce, parseMarkdown, escapeQuotes };
 })();
 
 // --- RENDERING MODULE ---
 const Renderer = (() => {
-    /**
-     * Renders the projects grid
-     */
     const renderProjects = () => {
         const projectGrid = Utils.getElement(SELECTORS.projectGrid);
         if (!projectGrid) return;
-
         const { projects } = PortfolioData;
         projectGrid.innerHTML = projects.map((p) => `
             <div class="glass-panel p-6 rounded-xl group relative overflow-hidden flex flex-col justify-between hover:border-cyan-500/50 transition-all duration-300">
@@ -203,11 +204,7 @@ const Renderer = (() => {
                     <div class="flex justify-between items-start mb-2">
                         <div class="text-xs font-bold text-purple-400 tracking-widest">${p.tag}</div>
                         <div class="flex gap-2">
-                            <a href="${p.github}" target="_blank" class="text-gray-500 hover:text-white transition-colors relative z-20 p-2 -m-2">
-                                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-                                </svg>
-                            </a>
+                            <a href="${p.github}" target="_blank" class="text-gray-500 hover:text-white transition-colors relative z-20 p-2 -m-2"><svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg></a>
                         </div>
                     </div>
                     <a href="${p.link}" target="_blank" class="group-hover:text-cyan-400 transition-colors block relative z-20">
@@ -229,13 +226,9 @@ const Renderer = (() => {
         `).join('');
     };
 
-    /**
-     * Renders the skills grid
-     */
     const renderSkills = () => {
         const skillGrid = Utils.getElement(SELECTORS.skillsGrid);
         if (!skillGrid) return;
-
         const { skills } = PortfolioData;
         skillGrid.innerHTML = skills.map(s => `
             <div class="bg-white/5 border border-white/5 rounded-lg p-3 text-center text-xs font-medium text-gray-300 hover:bg-cyan-500/20 hover:text-cyan-400 transition-all cursor-default skill-item" data-cat="${s.c}">
@@ -244,13 +237,9 @@ const Renderer = (() => {
         `).join('');
     };
 
-    /**
-     * Renders experience tabs
-     */
     const renderExperienceTabs = () => {
         const listEl = Utils.getElement(SELECTORS.roleList);
         if (!listEl) return;
-
         const { experienceData } = PortfolioData;
         listEl.innerHTML = experienceData.map((role, i) => `
             <button onclick="ExperienceModule.updateExperienceView(${i})"
@@ -267,21 +256,9 @@ const Renderer = (() => {
 // --- EXPERIENCE MODULE ---
 const ExperienceModule = (() => {
     let currentChartInstance = null;
-
-    /**
-     * Updates the experience view with the selected role
-     * @param {number} index - Index of the experience data
-     */
     const updateExperienceView = (index) => {
         const { experienceData } = PortfolioData;
-
-        // Validate index
-        if (index < 0 || index >= experienceData.length) {
-            console.error('Invalid experience index:', index);
-            return;
-        }
-
-        // Update tab states
+        if (index < 0 || index >= experienceData.length) return;
         document.querySelectorAll('#role-list button').forEach((btn, i) => {
             if (i === index) {
                 btn.classList.remove('tab-inactive');
@@ -291,39 +268,22 @@ const ExperienceModule = (() => {
                 btn.classList.remove('tab-active');
             }
         });
-
         const data = experienceData[index];
-
-        // Update DOM elements safely
         const titleEl = Utils.getElement(SELECTORS.roleTitle);
         const companyEl = Utils.getElement(SELECTORS.roleCompany);
         const dateEl = Utils.getElement(SELECTORS.roleDate);
         const bulletsEl = Utils.getElement(SELECTORS.roleBullets);
-
         if (titleEl) titleEl.textContent = data.title;
         if (companyEl) companyEl.textContent = data.company;
         if (dateEl) dateEl.textContent = data.date;
-        if (bulletsEl) {
-            bulletsEl.innerHTML = data.bullets.map(b => `<li class="flex gap-2"><span class="text-cyan-400">▹</span>${b}</li>`).join('');
-        }
-
-        // Update chart
+        if (bulletsEl) bulletsEl.innerHTML = data.bullets.map(b => `<li class="flex gap-2"><span class="text-cyan-400">▹</span>${b}</li>`).join('');
         updateChart(data);
     };
 
-    /**
-     * Updates the chart with new data
-     * @param {Object} data - Chart data
-     */
     const updateChart = (data) => {
         const ctx = Utils.getElement(SELECTORS.impactChart);
         if (!ctx) return;
-
-        // Destroy existing chart
-        if (currentChartInstance) {
-            currentChartInstance.destroy();
-        }
-
+        if (currentChartInstance) currentChartInstance.destroy();
         currentChartInstance = new Chart(ctx, {
             type: 'bar',
             data: {
@@ -342,262 +302,193 @@ const ExperienceModule = (() => {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
-                    y: {
-                        beginAtZero: true,
-                        grid: { color: 'rgba(255,255,255,0.05)' },
-                        ticks: { color: '#888' }
-                    },
-                    x: {
-                        grid: { display: false },
-                        ticks: { color: '#fff' }
-                    }
+                    y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#888' } },
+                    x: { grid: { display: false }, ticks: { color: '#fff' } }
                 }
             }
         });
     };
-
     return { updateExperienceView };
 })();
 
 // --- NAVIGATION MODULE ---
 const NavigationModule = (() => {
     let lastScrollTop = 0;
-
-    /**
-     * Initializes navigation scroll behavior
-     */
     const initScrollBehavior = () => {
         const mainScroll = Utils.getElement(SELECTORS.mainScroll);
         const navbar = Utils.getElement(SELECTORS.navbar);
-
         if (!mainScroll || !navbar) return;
-
         const handleScroll = Utils.debounce(() => {
             const scrollTop = mainScroll.scrollTop;
-            if (scrollTop > lastScrollTop) {
-                navbar.classList.add('nav-hidden');
-            } else {
-                navbar.classList.remove('nav-hidden');
-            }
+            if (scrollTop > lastScrollTop) navbar.classList.add('nav-hidden');
+            else navbar.classList.remove('nav-hidden');
             lastScrollTop = scrollTop;
         }, 10);
-
         mainScroll.addEventListener('scroll', handleScroll, { passive: true });
     };
-
-    /**
-     * Smooth scroll to section
-     * @param {string} id - Section ID
-     */
     const scrollToSection = (id) => {
         const element = document.querySelector(id);
         if (!element) return;
-
         const main = Utils.getElement(SELECTORS.mainScroll);
-        if (!main) return;
-
-        const offsetTop = element.offsetTop;
-        main.scrollTo({
-            top: offsetTop,
-            behavior: 'smooth'
-        });
+        main.scrollTo({ top: element.offsetTop, behavior: 'smooth' });
     };
-
     return { initScrollBehavior, scrollToSection };
 })();
 
 // --- SKILLS MODULE ---
 const SkillsModule = (() => {
-    /**
-     * Filters skills by category
-     * @param {string} category - Category to filter by ('all' for all skills)
-     */
     const filterSkills = (category) => {
-        // Update filter button states
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.classList.remove('bg-cyan-500', 'text-black');
             btn.classList.add('bg-white/5', 'text-gray-400');
         });
-
-        const targetBtn = event?.target;
-        if (targetBtn) {
-            targetBtn.classList.remove('bg-white/5', 'text-gray-400');
-            targetBtn.classList.add('bg-cyan-500', 'text-black');
+        if (event?.target) {
+            event.target.classList.remove('bg-white/5', 'text-gray-400');
+            event.target.classList.add('bg-cyan-500', 'text-black');
         }
-
-        // Filter skill items
         document.querySelectorAll('.skill-item').forEach(item => {
-            const display = (category === 'all' || item.dataset.cat === category) ? 'block' : 'none';
-            item.style.display = display;
+            item.style.display = (category === 'all' || item.dataset.cat === category) ? 'block' : 'none';
         });
     };
-
     return { filterSkills };
 })();
 
-// --- AI MODULE ---
+// --- AI MODULE (FIXED) ---
 const AIModule = (() => {
-    /**
-     * Generates AI analysis for a project
-     * @param {string} projectTitle - Title of the project
-     */
+    let currentTypewriterTimeout = null;
+    let isGeneratingBio = false;
+
     const generateAIAnalysis = async (projectTitle) => {
         const modal = Utils.getElement(SELECTORS.aiModal);
         const title = Utils.getElement(SELECTORS.modalTitle);
         const body = Utils.getElement(SELECTORS.modalBody);
 
-        if (!modal || !title || !body) return;
-
+        if (!modal) return;
         title.textContent = projectTitle;
         modal.classList.add('active');
-        body.innerHTML = '<div class="flex items-center gap-2 text-cyan-400"><div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> Thinking...</div>';
+        body.innerHTML = '<div class="flex items-center gap-2 text-cyan-400"><div class="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div> Connecting to Gemini...</div>';
 
-        if (!CONFIG.API_KEY) {
+        if (window.location.protocol === 'file:') {
             body.innerHTML = `
                 <div class="text-red-400 text-center">
-                    <h3 class="text-lg font-bold mb-2">🔑 API Key Required</h3>
-                    <p class="text-sm mb-4">Please add your Gemini API key to the CONFIG section at the top of the JavaScript file.</p>
-                    <p class="text-xs text-gray-400">Get your key from: <a href="https://makersuite.google.com/app/apikey" target="_blank" class="text-cyan-400 hover:underline">Google AI Studio</a></p>
-                </div>
-            `;
+                    <h3 class="text-lg font-bold mb-2">⚠️ Local File Error</h3>
+                    <p class="text-sm">Google's API blocks requests from "file://" for security (CORS).</p>
+                    <p class="text-sm mt-2 text-gray-400">Please use <strong>VS Code Live Server</strong> to run this.</p>
+                </div>`;
             return;
         }
 
         try {
-            const prompt = `
-                Analyze the project "${projectTitle}" for an AI Engineering portfolio.
-                Strictly follow this structure:
-                1. **Problem Definition**: Clear business problem or user pain point.
-                2. **Process & Architecture**: Technical workflow, tools used (RAG, LLMs, etc.), and complexity decisions.
-                3. **Outcome & Impact**: Quantifiable results (metrics) and what was achieved.
-                Keep it concise and professional.
-            `;
-
+            const prompt = `Analyze "${projectTitle}" for an AI Engineer portfolio. Strict sections: 1. Problem, 2. Tech Stack, 3. Impact (Metrics). Concise.`;
             const response = await fetch(`${CONFIG.GEMINI_API_URL}?key=${CONFIG.API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }]
-                })
+                body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
             });
 
-            if (!response.ok) {
-                throw new Error(`API request failed: ${response.status}`);
-            }
-
+            if (!response.ok) throw new Error(`Status: ${response.status}`);
             const data = await response.json();
             const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-            if (!text) {
-                throw new Error('Invalid API response structure');
-            }
+            if (!text) throw new Error('Empty response');
 
             body.innerHTML = Utils.parseMarkdown(text);
         } catch (error) {
-            console.error('AI Analysis error:', error);
-            body.innerHTML = `
-                <div class="text-red-400 text-center">
-                    <h3 class="text-lg font-bold mb-2">⚠️ Connection Error</h3>
-                    <p class="text-sm mb-4">Unable to generate AI analysis. Please check your internet connection and API key.</p>
-                    <p class="text-xs text-gray-400">If the problem persists, verify your Gemini API key is valid.</p>
-                </div>
-            `;
+            console.error('AI Error:', error);
+            body.innerHTML = `<div class="text-red-400 text-center"><h3>⚠️ Analysis Failed</h3><p class="text-sm">${error.message}</p></div>`;
         }
     };
 
-    /**
-     * Closes the AI modal
-     */
     const closeModal = () => {
         const modal = Utils.getElement(SELECTORS.aiModal);
-        if (modal) {
-            modal.classList.remove('active');
-        }
+        if (modal) modal.classList.remove('active');
     };
 
-    /**
-     * Generates live bio using AI
-     */
     const generateLiveBio = async () => {
+        // PREVENT SPAM CLICKS (Fixes race condition)
+        if (isGeneratingBio) return;
+
         const box = Utils.getElement(SELECTORS.aiSummaryBox);
+        const btn = document.querySelector('button[onclick="generateLiveBio()"]');
+
         if (!box) return;
 
-        box.innerHTML = `
-            <div class="flex items-center gap-2 text-cyan-400 font-mono text-sm">
-                <span class="animate-spin">⟳</span> ESTABLISHING UPLINK...
-            </div>
-        `;
+        // Clear previous timeout immediately
+        if (currentTypewriterTimeout) {
+            clearTimeout(currentTypewriterTimeout);
+            currentTypewriterTimeout = null;
+        }
+
+        isGeneratingBio = true;
+        if (btn) btn.style.opacity = "0.5";
+
+        box.innerHTML = `<div class="flex items-center gap-2 text-cyan-400 font-mono text-sm"><span class="animate-spin">⟳</span> GENERATING NEW BIO...</div>`;
 
         try {
-            if (!CONFIG.API_KEY) {
-                throw new Error('No API key provided');
-            }
+            if (window.location.protocol === 'file:') throw new Error('CORS_ERROR');
 
             const response = await fetch(`${CONFIG.GEMINI_API_URL}?key=${CONFIG.API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{
-                        parts: [{
-                            text: "Write a short, punchy, 2-sentence professional bio for Gunasree R, an AI Engineer. Focus on her resume strengths like RAG, Efficiency, and Engineering. Make it sound modern and high-tech. Do not use quotes."
-                        }]
-                    }]
+                    contents: [{ parts: [{ text: "Write a short, punchy, 2-sentence professional bio for Gunasree R, AI Engineer. Focus on RAG, Efficiency, and Engineering. Modern tone." }] }]
                 })
             });
 
-            if (!response.ok) {
-                throw new Error(`API request failed: ${response.status}`);
-            }
-
+            if (!response.ok) throw new Error(`API_${response.status}`);
             const data = await response.json();
-            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+            const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Error generating bio.";
 
-            if (!text) {
-                throw new Error('Invalid API response');
-            }
+            // Format text
+            const formatted = text.replace(/(AI Engineer|RAG|Efficiency)/g, '<strong class="text-white">$1</strong>');
 
-            const formattedText = text.replace(/(AI Engineer|RAG|LLMs|Efficiency|Engineering)/g, '<strong class="text-white">$1</strong>');
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = formattedText;
-            const cleanText = tempDiv.innerHTML;
-
+            // CLEAR BOX AGAIN before typing starts (Safety measure)
             box.innerHTML = '';
-            typeWriter(SELECTORS.aiSummaryBox, cleanText, CONFIG.ANIMATION_SPEED);
+            typeWriter(SELECTORS.aiSummaryBox, formatted, CONFIG.ANIMATION_SPEED);
 
         } catch (error) {
-            console.error('Bio generation error:', error);
-            const fallbackText = "Expert <strong class='text-white'>AI Engineer</strong> specializing in <strong class='text-white'>RAG Pipelines</strong> and production-grade systems. I turn complex data into actionable intelligence with measurable <strong class='text-white'>Efficiency</strong>.";
+            if (error.message !== 'CORS_ERROR') {
+                console.error('Bio Error:', error);
+            }
+            let msg = "Expert <strong class='text-white'>AI Engineer</strong>. (Offline Mode)";
+
+            if (error.message === 'CORS_ERROR') {
+                msg = "<span class='text-red-400'>Error: Cannot run from local file. Use Live Server.</span>";
+            }
             box.innerHTML = '';
-            typeWriter(SELECTORS.aiSummaryBox, fallbackText, CONFIG.ANIMATION_SPEED);
+            typeWriter(SELECTORS.aiSummaryBox, msg, CONFIG.ANIMATION_SPEED);
+        } finally {
+            // Re-enable button
+            isGeneratingBio = false;
+            if (btn) btn.style.opacity = "1";
         }
     };
 
-    /**
-     * Typewriter effect for text animation
-     * @param {string} elementId - ID of element to animate
-     * @param {string} text - Text to animate
-     * @param {number} speed - Animation speed
-     */
-    const typeWriter = (elementId, text, speed = CONFIG.ANIMATION_SPEED) => {
+    const typeWriter = (elementId, text, speed) => {
         const element = Utils.getElement(elementId);
         if (!element) return;
 
         element.innerHTML = `<span class="text-cyan-400 font-bold mr-2">></span>`;
-
         let i = 0;
+
         const type = () => {
             if (i < text.length) {
                 if (text.substring(i).startsWith('<strong')) {
-                    const endTagIndex = text.indexOf('</strong>', i);
-                    if (endTagIndex !== -1) {
-                        element.innerHTML += text.substring(i, endTagIndex + 9);
-                        i = endTagIndex + 9;
+                    const end = text.indexOf('</strong>', i);
+                    if (end !== -1) {
+                        element.innerHTML += text.substring(i, end + 9);
+                        i = end + 9;
+                    }
+                } else if (text.substring(i).startsWith('<span')) {
+                    const end = text.indexOf('</span>', i);
+                    if (end !== -1) {
+                        element.innerHTML += text.substring(i, end + 7);
+                        i = end + 7;
                     }
                 } else {
                     element.innerHTML += text.charAt(i);
                     i++;
                 }
-                setTimeout(type, speed);
+                currentTypewriterTimeout = setTimeout(type, speed);
             } else {
                 element.innerHTML += `<span class="cursor-blink"></span>`;
             }
@@ -611,275 +502,79 @@ const AIModule = (() => {
 // --- CHAT MODULE ---
 const ChatModule = (() => {
     let chatOpen = false;
-
-    const promptPool = [
-        "Summarize skills", "Explain FairAssess", "Why hire her?",
-        "Experience with RAG?", "Top 3 achievements", "Tech stack overview",
-        "Tell me about Resume Matcher", "Hackathon details", "Leadership roles?",
-        "What is 'Hedgy'?"
-    ];
-
-    // Fallback knowledge base for offline responses
+    const promptPool = ["Summarize skills", "Explain FairAssess", "Why hire her?", "Experience with RAG?", "Top achievements"];
     const fallbackKnowledge = {
-        'fairassess': `**FairAssess.ai** - Gunasree's bias detection engine using transformer-based models. 
-        
-**Key Results:**
-• Increased diverse applicant rates by 52%
-• Reduced discriminatory language by 43%
-• Built with Next.js 16, Hugging Face, TypeScript
-
-**Impact:** Helps organizations make fairer hiring decisions through AI-powered bias detection.`,
-        
-        'rag': `**RAG Pipeline Experience:**
-• Built RAG pipelines boosting accuracy by 72% at Ausweg
-• Implemented vector databases (FAISS, Chroma)
-• Used LangChain for production systems
-• Hybrid scoring with BM25 + FAISS for resume matching
-
-**Technical Stack:** Python, LangChain, Vector DBs, FAISS, PostgreSQL`,
-        
-        'resume matcher': `**Resume Matcher** - Automated resume screening system.
-        
-**Features:**
-• Hybrid scoring (BM25 + FAISS)
-• 90% automation of initial screening
-• 35% improvement in resume-JD match accuracy
-• Built with Python, FAISS, Streamlit
-
-**Business Impact:** Saves HR teams significant time in the hiring process.`,
-        
-        'experience': `**Current Role:** AI Engineer at Ausweg Info Control (Jul 2025-Present)
-
-**Key Achievements:**
-• Built LLM chatbot for EMS, automating support workflows
-• Engineered RAG pipelines (72% accuracy boost)
-• Integrated IoT telemetry (60% faster data lookup)
-
-**Previous:** Data Analyst (Aug-Dec 2024) - Optimized MQTT IIoT pipelines`,
-        
-        'skills': `**AI/ML Skills:** Python, TensorFlow, PyTorch, scikit-learn, LLMs, RAG, NLP, Computer Vision, Deep Learning, LangChain
-
-**Data Skills:** SQL, MySQL, PostgreSQL, Vector DBs, FAISS, Power BI, ELK Stack, ETL
-
-**Development:** Java, C, JavaScript, Next.js, React, Docker, FastAPI
-
-**Soft Skills:** Communication, Leadership`,
-        
-        'achievements': `**Top 3 Achievements:**
-
-1. **VISAI Hackathon 2024** - Mentored by Ashok Leyland, built innovative AI solutions
-
-2. **Google Cloud Gen AI Certification** - Certified by Simplilearn in Generative AI
-
-3. **INTI Malaysia Program** - 4-month mobility program focusing on real-world Data Science
-
-**Leadership:** Rotaract Director - Community Service Director leading tech-driven social initiatives`,
-        
-        'whatshouldiwatch': `**WhatShouldIWatch** - Mood-based movie recommendation engine.
-        
-**Results:**
-• Reduced user browsing time from 18 minutes to 30 seconds
-• Smart filtering based on user mood/preferences
-• Built with Serverless architecture, TMDB API, PWA technology
-
-**Impact:** Helps users quickly find movies they'll enjoy without endless scrolling.`,
-        
-        'ai engineer': `**Gunasree R** - AI Engineer specializing in:
-• **LLMs & RAG Pipelines** - Production-grade systems
-• **IoT Analytics** - Real-time data processing
-• **Bias Detection** - Fair AI systems (FairAssess)
-• **Efficiency Optimization** - Measurable business impact
-
-**Focus:** Merging predictive modeling with engineering excellence for measurable results.`
+        'fairassess': `**FairAssess.ai** - Bias detection engine. +52% diverse applicants.`,
+        'rag': `**RAG Experience:** Built pipelines at Ausweg (72% accuracy boost) using FAISS & LangChain.`,
+        'skills': `**Skills:** Python, RAG, LLMs, SQL, Next.js, Docker.`
     };
 
-    /**
-     * Gets fallback response for common questions
-     * @param {string} message - User message
-     * @returns {string|null} - Fallback response or null
-     */
-    const getFallbackResponse = (message) => {
-        const lowerMessage = message.toLowerCase();
-        
-        for (const [key, response] of Object.entries(fallbackKnowledge)) {
-            if (lowerMessage.includes(key) || lowerMessage.includes(key.replace(' ', ''))) {
-                return response;
-            }
+    const getFallbackResponse = (msg) => {
+        const lower = msg.toLowerCase();
+        for (const [key, res] of Object.entries(fallbackKnowledge)) {
+            if (lower.includes(key)) return res;
         }
-
-        // General responses for unmatched queries
-        if (lowerMessage.includes('who') && lowerMessage.includes('you')) {
-            return `Hi! I'm **Hedgy** 🦔, Gunasree's AI portfolio assistant. I know everything about her work in **AI Engineering**, **RAG pipelines**, **bias detection**, and **efficiency optimization**. What would you like to know?`;
-        }
-
-        if (lowerMessage.includes('contact') || lowerMessage.includes('email') || lowerMessage.includes('hire')) {
-            return `For contact information, please visit the Contact section above. Gunasree is available for AI/ML engineering roles, RAG system development, and efficiency optimization projects. She specializes in turning complex data into actionable intelligence!`;
-        }
-
-        return null;
+        return `I am Hedgy 🦔. Ask me about Gunasree's RAG pipelines or projects!`;
     };
 
-    /**
-     * Toggles chat window visibility
-     */
     const toggleChat = () => {
         chatOpen = !chatOpen;
         const win = Utils.getElement(SELECTORS.chatWindow);
-        if (win) {
-            if (chatOpen) {
-                win.classList.add('open');
-            } else {
-                win.classList.remove('open');
-            }
-        }
+        if (win) chatOpen ? win.classList.add('open') : win.classList.remove('open');
     };
 
-    /**
-     * Gets random prompt suggestions
-     * @param {number} count - Number of prompts to return
-     * @returns {Array} - Array of random prompts
-     */
-    const getRandomPrompts = (count = 3) => {
-        const shuffled = [...promptPool].sort(() => 0.5 - Math.random());
-        return shuffled.slice(0, count);
-    };
-
-    /**
-     * Renders prompt suggestions
-     */
     const renderPrompts = () => {
         const container = Utils.getElement(SELECTORS.suggestionsContainer);
         if (!container) return;
-
-        const prompts = getRandomPrompts();
-        container.innerHTML = prompts.map(p => {
-            const safePrompt = Utils.escapeQuotes(p);
-            return `
-                <button onclick="ChatModule.sendQuickMessage('${safePrompt}')" class="whitespace-nowrap px-3 py-1.5 rounded-lg bg-white/5 text-cyan-400 text-xs border border-white/10 hover:bg-cyan-500/20 hover:border-cyan-500/50 transition-all font-medium">
-                    ✨ ${p}
-                </button>
-            `;
-        }).join('');
+        container.innerHTML = promptPool.sort(() => 0.5 - Math.random()).slice(0, 3).map(p =>
+            `<button onclick="ChatModule.sendQuickMessage('${Utils.escapeQuotes(p)}')" class="px-3 py-1.5 rounded-lg bg-white/5 text-cyan-400 text-xs border border-white/10 hover:bg-cyan-500/20 transition-all">✨ ${p}</button>`
+        ).join('');
     };
 
-    /**
-     * Sends a quick message from suggestions
-     * @param {string} msg - Message to send
-     */
     const sendQuickMessage = (msg) => {
         const input = Utils.getElement(SELECTORS.userInput);
-        if (input) {
-            input.value = msg;
-            sendMessage();
-            setTimeout(renderPrompts, 500);
-        }
+        if (input) { input.value = msg; sendMessage(); setTimeout(renderPrompts, 500); }
     };
 
-    /**
-     * Sends a message to the chat
-     */
     const sendMessage = async () => {
         const input = Utils.getElement(SELECTORS.userInput);
         const msgs = Utils.getElement(SELECTORS.chatMessages);
-
-        if (!input || !msgs) return;
+        if (!input || !msgs || !input.value.trim()) return;
 
         const text = input.value.trim();
-        if (!text) return;
-
         msgs.innerHTML += `<div class="msg user">${text}</div>`;
         input.value = '';
         msgs.scrollTop = msgs.scrollHeight;
 
-        const loadingId = 'load-' + Date.now();
-        msgs.innerHTML += `<div class="msg ai animate-pulse" id="${loadingId}">...</div>`;
-
-        if (!CONFIG.API_KEY) {
-            const loadingEl = document.getElementById(loadingId);
-            if (loadingEl) loadingEl.remove();
-
-            const errorResponse = `🔑 <strong>API Key Required</strong><br><br>Please add your Gemini API key to the CONFIG section at the top of the JavaScript file to enable AI chat functionality.<br><br>Get your key from: <a href="https://makersuite.google.com/app/apikey" target="_blank" class="text-cyan-400 hover:underline">Google AI Studio</a>`;
-            msgs.innerHTML += `<div class="msg ai">${errorResponse}</div>`;
-            msgs.scrollTop = msgs.scrollHeight;
-            renderPrompts();
-            return;
-        }
+        const loadId = 'load-' + Date.now();
+        msgs.innerHTML += `<div class="msg ai animate-pulse" id="${loadId}">...</div>`;
 
         try {
-            const contextData = `
-                EXPERIENCE: ${JSON.stringify(PortfolioData.experienceData)}
-                PROJECTS: ${JSON.stringify(PortfolioData.projects)}
-                SKILLS: ${JSON.stringify(PortfolioData.skills)}
-            `;
+            if (window.location.protocol === 'file:') throw new Error('CORS');
 
+            const context = `RESUME DATA: ${JSON.stringify(PortfolioData)}`;
             const response = await fetch(`${CONFIG.GEMINI_API_URL}?key=${CONFIG.API_KEY}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{ parts: [{ text: text }] }],
-                    systemInstruction: {
-                        parts: [{
-                            text: `You are Hedgy 🦔, Gunasree's portfolio AI assistant. Answer strictly based on the following resume data: ${contextData}. Keep answers concise, friendly, and professional. Use bolding (**like this**) for key metrics and skills. Do NOT mention contact info unless explicitly asked.`
-                        }]
-                    }
+                    systemInstruction: { parts: [{ text: `You are Hedgy. Be brief. Base answer on: ${context}` }] }
                 })
             });
 
-            if (!response.ok) {
-                throw new Error(`API request failed: ${response.status}`);
-            }
-
+            if (!response.ok) throw new Error('API_FAIL');
             const data = await response.json();
-            const loadingEl = document.getElementById(loadingId);
-            if (loadingEl) loadingEl.remove();
+            const reply = data?.candidates?.[0]?.content?.parts?.[0]?.text || "Error.";
 
-            const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (!rawText) {
-                throw new Error('Invalid API response');
-            }
-
-            const formattedText = Utils.parseMarkdown(rawText);
-            msgs.innerHTML += `<div class="msg ai">${formattedText}</div>`;
-            msgs.scrollTop = msgs.scrollHeight;
-            renderPrompts();
-
-        } catch (error) {
-            console.error('Chat error:', error);
-
-            setTimeout(() => {
-                const loadingEl = document.getElementById(loadingId);
-                if (loadingEl) loadingEl.remove();
-
-                // Try fallback response first
-                const fallbackResponse = getFallbackResponse(text);
-                
-                if (fallbackResponse) {
-                    const formattedText = Utils.parseMarkdown(fallbackResponse);
-                    msgs.innerHTML += `<div class="msg ai">🤖 <strong>Offline Mode</strong><br><br>${formattedText}<br><br><em>Note: This is a cached response. For more detailed answers, please ensure your API key is configured correctly.</em></div>`;
-                } else {
-                    // Enhanced error response with debugging info
-                    const isApiKeyError = error.message.includes('401') || error.message.includes('403');
-                    const isNetworkError = error.message.includes('fetch');
-                    
-                    let errorResponse = `⚠️ <strong>Connection Error</strong><br><br>`;
-                    
-                    if (isApiKeyError) {
-                        errorResponse += `🔑 <strong>API Key Issue</strong><br>Your Gemini API key may be invalid or expired. Please check your API key configuration.<br><br>`;
-                        errorResponse += `Get a new key from: <a href="https://makersuite.google.com/app/apikey" target="_blank" class="text-cyan-400 hover:underline">Google AI Studio</a><br><br>`;
-                    } else if (isNetworkError) {
-                        errorResponse += `📡 <strong>Network Issue</strong><br>Unable to connect to Gemini API. Please check your internet connection.<br><br>`;
-                    } else {
-                        errorResponse += `🤖 <strong>Service Unavailable</strong><br>The AI service is temporarily unavailable.<br><br>`;
-                    }
-                    
-                    errorResponse += `I still know about Gunasree's work! Try asking about:<br>• RAG pipelines<br>• FairAssess project<br>• Her experience<br>• Technical skills`;
-                    
-                    msgs.innerHTML += `<div class="msg ai">${errorResponse}</div>`;
-                }
-                msgs.scrollTop = msgs.scrollHeight;
-                renderPrompts();
-            }, CONFIG.FALLBACK_DELAY);
+            document.getElementById(loadId).remove();
+            msgs.innerHTML += `<div class="msg ai">${Utils.parseMarkdown(reply)}</div>`;
+        } catch (e) {
+            console.error(e);
+            document.getElementById(loadId).remove();
+            let err = e.message === 'CORS' ? "⚠️ Connect via Local Server to use AI." : getFallbackResponse(text);
+            msgs.innerHTML += `<div class="msg ai">${Utils.parseMarkdown(err)}</div>`;
         }
+        msgs.scrollTop = msgs.scrollHeight;
     };
 
     return { toggleChat, renderPrompts, sendQuickMessage, sendMessage };
@@ -887,169 +582,69 @@ const ChatModule = (() => {
 
 // --- ANIMATION MODULE ---
 const AnimationModule = (() => {
-    /**
-     * Initializes Three.js background animation
-     */
     const initThreeJS = () => {
         const container = Utils.getElement(SELECTORS.canvasContainer);
         if (!container) return;
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
 
-        try {
-            const scene = new THREE.Scene();
-            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+        const geo = new THREE.IcosahedronGeometry(2, 60);
+        const mat = new THREE.ShaderMaterial({
+            vertexShader: `uniform float uTime; varying float vNoise; void main() { vec3 pos = position; pos += normal * sin(pos.x * 2.0 + uTime) * 0.1; gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0); vNoise = pos.z; }`,
+            fragmentShader: `varying float vNoise; void main() { gl_FragColor = vec4(0.02, 0.71, 0.83, 0.3); }`,
+            uniforms: { uTime: { value: 0 } }, wireframe: true, transparent: true
+        });
+        const sphere = new THREE.Mesh(geo, mat);
+        scene.add(sphere);
+        camera.position.z = 6;
 
-            renderer.setSize(window.innerWidth, window.innerHeight);
-            container.appendChild(renderer.domElement);
-
-            const geometry = new THREE.IcosahedronGeometry(2, 60);
-            const material = new THREE.ShaderMaterial({
-                vertexShader: `
-                    uniform float uTime;
-                    varying float vNoise;
-                    void main() {
-                        vec3 pos = position;
-                        pos += normal * sin(pos.x * 2.0 + uTime) * 0.1;
-                        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-                        vNoise = pos.z;
-                    }
-                `,
-                fragmentShader: `
-                    varying float vNoise;
-                    void main() {
-                        gl_FragColor = vec4(0.02, 0.71, 0.83, 0.3);
-                    }
-                `,
-                uniforms: { uTime: { value: 0 } },
-                wireframe: true,
-                transparent: true
-            });
-
-            const sphere = new THREE.Mesh(geometry, material);
-            scene.add(sphere);
-            camera.position.z = 6;
-
-            let animationId;
-            const animate = () => {
-                animationId = requestAnimationFrame(animate);
-                material.uniforms.uTime.value += 0.01;
-                sphere.rotation.y += 0.002;
-                renderer.render(scene, camera);
-            };
-            animate();
-
-            // Handle window resize
-            const handleResize = () => {
-                camera.aspect = window.innerWidth / window.innerHeight;
-                camera.updateProjectionMatrix();
-                renderer.setSize(window.innerWidth, window.innerHeight);
-            };
-
-            window.addEventListener('resize', handleResize);
-
-            // Cleanup function
-            return () => {
-                if (animationId) {
-                    cancelAnimationFrame(animationId);
-                }
-                window.removeEventListener('resize', handleResize);
-                if (container.contains(renderer.domElement)) {
-                    container.removeChild(renderer.domElement);
-                }
-                renderer.dispose();
-            };
-
-        } catch (error) {
-            console.error('Three.js initialization failed:', error);
-        }
+        const animate = () => {
+            requestAnimationFrame(animate);
+            mat.uniforms.uTime.value += 0.01;
+            sphere.rotation.y += 0.002;
+            renderer.render(scene, camera);
+        };
+        animate();
+        window.addEventListener('resize', () => { camera.aspect = window.innerWidth / window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
     };
 
-    /**
-     * Initializes scroll reveal animations
-     */
     const initScrollReveal = () => {
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-
-                    // Update active navigation link
-                    const id = entry.target.getAttribute('id');
-                    document.querySelectorAll('.nav-link').forEach(link => {
-                        if (link.getAttribute('href') === '#' + id) {
-                            link.classList.add('active');
-                        } else {
-                            link.classList.remove('active');
-                        }
-                    });
-                }
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('is-visible'); });
         }, { threshold: CONFIG.SCROLL_THRESHOLD });
-
-        document.querySelectorAll('.reveal-section').forEach(section => {
-            observer.observe(section);
-        });
+        document.querySelectorAll('.reveal-section').forEach(s => observer.observe(s));
     };
-
     return { initThreeJS, initScrollReveal };
 })();
 
 // --- INITIALIZATION ---
-const initContent = () => {
-    try {
-        Renderer.renderProjects();
-        Renderer.renderSkills();
-        Renderer.renderExperienceTabs();
-        ExperienceModule.updateExperienceView(0);
-    } catch (error) {
-        console.error('Content initialization failed:', error);
-    }
+window.onload = () => {
+    const loading = Utils.getElement(SELECTORS.loading);
+    if (loading) { loading.style.opacity = '0'; setTimeout(() => loading.remove(), 1000); }
+    ThemeModule.initTheme();
+    AnimationModule.initThreeJS();
+    NavigationModule.initScrollBehavior();
+    AnimationModule.initScrollReveal();
+    Renderer.renderProjects();
+    Renderer.renderSkills();
+    Renderer.renderExperienceTabs();
+    ExperienceModule.updateExperienceView(0);
+    ChatModule.renderPrompts();
 };
 
-// --- GLOBAL EXPORTS ---
+// Exports
 window.ExperienceModule = ExperienceModule;
 window.NavigationModule = NavigationModule;
 window.SkillsModule = SkillsModule;
 window.AIModule = AIModule;
 window.ChatModule = ChatModule;
-
-// --- BOOTSTRAP ---
-window.onload = () => {
-    const loadingScreen = Utils.getElement(SELECTORS.loading);
-
-    // Fade out loading screen
-    if (loadingScreen) {
-        loadingScreen.style.opacity = '0';
-        setTimeout(() => {
-            if (loadingScreen.parentNode) {
-                loadingScreen.parentNode.removeChild(loadingScreen);
-            }
-        }, 1000);
-    }
-
-    try {
-        // Initialize modules
-        AnimationModule.initThreeJS();
-        NavigationModule.initScrollBehavior();
-        AnimationModule.initScrollReveal();
-
-        // Render content
-        initContent();
-
-        // Initialize chat
-        if (typeof ChatModule.renderPrompts === 'function') {
-            ChatModule.renderPrompts();
-        }
-
-    } catch (error) {
-        console.error('Application initialization failed:', error);
-    }
-};
-
-// --- LEGACY COMPATIBILITY FUNCTIONS ---
 window.scrollToSection = NavigationModule.scrollToSection;
 window.filterSkills = SkillsModule.filterSkills;
 window.generateLiveBio = AIModule.generateLiveBio;
 window.toggleChat = ChatModule.toggleChat;
 window.sendMessage = ChatModule.sendMessage;
 window.closeModal = AIModule.closeModal;
+window.toggleTheme = ThemeModule.toggleTheme;
