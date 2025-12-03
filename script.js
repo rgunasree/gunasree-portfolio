@@ -172,14 +172,29 @@ const Utils = (() => {
 
     const parseMarkdown = (text) => {
         if (!text) return '';
-        return text
+        // 1. Escape HTML (Prevent XSS)
+        const safeText = text.replace(/[&<>"']/g, tag => ({
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#39;'
+        }[tag]));
+
+        // 2. Render Markdown
+        return safeText
             .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
             .replace(/\*(.*?)\*/g, '<em>$1</em>')
             .replace(/^\s*-\s+(.*)/gim, '• $1')
             .replace(/\n/g, '<br>');
     };
 
-    const escapeQuotes = (str) => str.replace(/'/g, "\\'");
+    const escapeQuotes = (str) => {
+        return str
+            .replace(/\\/g, '\\\\')
+            .replace(/'/g, "\\'")
+            .replace(/"/g, '\\"');
+    };
     return { getElement, debounce, parseMarkdown, escapeQuotes };
 })();
 
