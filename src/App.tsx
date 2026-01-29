@@ -1,14 +1,15 @@
+import { lazy, Suspense } from 'react';
 import FluidBackground from './components/FluidBackground';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
-import About from './components/About';
-import Skills from './components/Skills';
-import Projects from './components/Projects';
-import Contact from './components/Contact';
 import NeuralNetworkEasterEgg from './components/NeuralNetworkEasterEgg';
-
 import ScrollProgress from './components/ScrollProgress';
 import KudosButton from './components/KudosButton';
+
+const About = lazy(() => import('./components/About'));
+const Skills = lazy(() => import('./components/Skills'));
+const Projects = lazy(() => import('./components/Projects'));
+const Contact = lazy(() => import('./components/Contact'));
 
 function App() {
   return (
@@ -18,10 +19,12 @@ function App() {
       <FluidBackground />
       <Navigation />
       <Hero />
-      <About />
-      <Skills />
-      <Projects />
-      <Contact />
+      <Suspense fallback={<div className="h-screen flex items-center justify-center">Loading...</div>}>
+        <About />
+        <Skills />
+        <Projects />
+        <Contact />
+      </Suspense>
       <NeuralNetworkEasterEgg />
     </div>
   );

@@ -206,7 +206,13 @@ function ProjectCard({ project, index }: { project: typeof projects[0], index: n
                 translateY: useTransform(mouseY, [-0.5, 0.5], ["-5%", "5%"]),
               }}
             >
-              <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+              <img
+                src={project.image}
+                alt={project.title}
+                className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
             </motion.div>
 
             <motion.div
