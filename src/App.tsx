@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 import FluidBackground from './components/FluidBackground';
 import Navigation from './components/Navigation';
 import Hero from './components/Hero';
@@ -15,6 +16,7 @@ const Chatbot = lazy(() => import('./components/Chatbot'));
 function App() {
   return (
     <div className="relative min-h-screen text-white">
+      <SpeedInsights />
       <ScrollProgress />
       <KudosButton />
       <FluidBackground />
