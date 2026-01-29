@@ -169,8 +169,7 @@ export default function NeuralNetworkEasterEgg() {
 
             <canvas
               ref={canvasRef}
-              className="rounded-2xl border border-cyan-400/30"
-              style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #1a1a2e 100%)' }}
+              className="rounded-2xl border border-cyan-400/30 bg-space-gradient"
             />
 
             <div className="mt-6 text-center">

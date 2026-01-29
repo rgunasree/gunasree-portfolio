@@ -17,6 +17,8 @@ export default function FluidBackground() {
     let mouseY = canvas.height / 2;
     let particles: Particle[] = [];
 
+    let time = 0;
+
     class Particle {
       x: number;
       y: number;
@@ -24,6 +26,7 @@ export default function FluidBackground() {
       vy: number;
       radius: number;
       color: string;
+      opacity: number;
 
       constructor(x: number, y: number) {
         this.x = x;
@@ -31,7 +34,8 @@ export default function FluidBackground() {
         this.vx = (Math.random() - 0.5) * 0.5;
         this.vy = (Math.random() - 0.5) * 0.5;
         this.radius = Math.random() * 2 + 1;
-        this.color = `rgba(${Math.random() * 100 + 100}, ${Math.random() * 100 + 150}, 255, ${Math.random() * 0.5 + 0.3})`;
+        this.opacity = Math.random() * 0.5 + 0.3;
+        this.color = `rgba(${Math.random() * 100 + 100}, ${Math.random() * 100 + 150}, 255, ${this.opacity})`;
       }
 
       update() {
@@ -75,24 +79,35 @@ export default function FluidBackground() {
       ctx.fillStyle = 'rgba(10, 10, 20, 0.1)';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+      time += 0.01; // Increment time for animation
+
       particles.forEach((particle, i) => {
         particle.update();
         particle.draw();
 
-        particles.slice(i + 1).forEach((otherParticle) => {
-          const dx = particle.x - otherParticle.x;
-          const dy = particle.y - otherParticle.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
+        // Smurf Theme Colors
+        // Primary: #00d7ff (RGB: 0, 215, 255)
+        // Secondary: #88CCFF (RGB: 136, 204, 255)
+        // Dark: #0055aa (RGB: 0, 85, 170)
 
-          if (distance < 120) {
-            ctx.beginPath();
-            ctx.strokeStyle = `rgba(100, 150, 255, ${0.2 * (1 - distance / 120)})`;
-            ctx.lineWidth = 0.5;
-            ctx.moveTo(particle.x, particle.y);
-            ctx.lineTo(otherParticle.x, otherParticle.y);
-            ctx.stroke();
-          }
-        });
+        const gradient = ctx.createRadialGradient(
+          particle.x,
+          particle.y,
+          0,
+          particle.x,
+          particle.y,
+          particle.radius * (1 + Math.sin(time * 2 + i) * 0.2)
+        );
+
+        // Use Smurf blue palette with varying opacities
+        gradient.addColorStop(0, `rgba(0, 215, 255, ${0.15 * particle.opacity})`); // Bright Smurf Blue
+        gradient.addColorStop(0.5, `rgba(136, 204, 255, ${0.1 * particle.opacity})`); // Light Blue
+        gradient.addColorStop(1, 'rgba(0, 85, 170, 0)'); // Dark Blue fade out
+
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.radius * 2, 0, Math.PI * 2);
+        ctx.fill();
       });
 
       requestAnimationFrame(animate);
@@ -122,8 +137,7 @@ export default function FluidBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full -z-10"
-      style={{ background: 'linear-gradient(135deg, #0a0a14 0%, #1a1a2e 100%)' }}
+      className="fixed top-0 left-0 w-full h-full -z-10 bg-space-gradient"
     />
   );
 }
