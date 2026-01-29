@@ -11,6 +11,7 @@ const About = lazy(() => import('./components/About'));
 const Skills = lazy(() => import('./components/Skills'));
 const Projects = lazy(() => import('./components/Projects'));
 const Contact = lazy(() => import('./components/Contact'));
+const Chatbot = lazy(() => import('./components/Chatbot'));
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
         <Skills />
         <Projects />
         <Contact />
+        <Chatbot />
       </Suspense>
       <NeuralNetworkEasterEgg />
     </div>
