@@ -5,8 +5,8 @@ const contactMethods = [
   {
     icon: Mail,
     label: 'Email',
-    value: 'gunasree@example.com',
-    href: 'mailto:gunasree@example.com',
+    value: 'gunasreeer@gmail.com',
+    href: 'mailto:gunasreeer@gmail.com',
     color: 'from-blue-500 to-cyan-500',
   },
   {
@@ -113,7 +113,7 @@ export default function Contact() {
             I'm actively seeking opportunities where I can apply my AI/ML expertise to solve real-world problems. Whether it's a full-time position, internship, or exciting project collaboration, I'd love to hear from you!
           </p>
           <motion.a
-            href="mailto:gunasree@example.com"
+            href="mailto:gunasreeer@gmail.com"
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full text-white font-semibold shadow-lg shadow-blue-500/50 hover:shadow-blue-500/70 transition-shadow"

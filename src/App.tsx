@@ -7,9 +7,14 @@ import Projects from './components/Projects';
 import Contact from './components/Contact';
 import NeuralNetworkEasterEgg from './components/NeuralNetworkEasterEgg';
 
+import ScrollProgress from './components/ScrollProgress';
+import KudosButton from './components/KudosButton';
+
 function App() {
   return (
     <div className="relative min-h-screen text-white">
+      <ScrollProgress />
+      <KudosButton />
       <FluidBackground />
       <Navigation />
       <Hero />
