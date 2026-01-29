@@ -1,21 +1,12 @@
-# Security Policy
+# Security & Contribution Policy
 
-## Supported Versions
+## 🔒 Security Policy
+This project is a personal portfolio and is strictly maintained by **@rgunasree**.
 
-Use this section to tell people about which versions of your project are
-currently being supported with security updates.
+## 🛑 Unauthorized Changes
+- **No external resume files** or personal data should ever be committed to this repository.
+- **Automated Bots**: Automated pull requests (from Vercel, Dependabot, etc.) must be manually reviewed before merging.
+- **Direct Pushes**: Direct pushes to the `main` branch are restricted. All changes should go through a Pull Request review process if possible, or be performed solely by the repository owner.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| 5.1.x   | :white_check_mark: |
-| 5.0.x   | :x:                |
-| 4.0.x   | :white_check_mark: |
-| < 4.0   | :x:                |
-
-## Reporting a Vulnerability
-
-Use this section to tell people how to report a vulnerability.
-
-Tell them where to go, how often they can expect to get an update on a
-reported vulnerability, what to expect if the vulnerability is accepted or
-declined, etc.
+## 📄 File Integrity
+The file `public/resume.pdf` is the official resume. Overwriting this file with unauthorized versions is strictly prohibited.
