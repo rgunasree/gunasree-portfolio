@@ -24,7 +24,7 @@ export default function Hero() {
   const handleDownloadResume = () => {
     const link = document.createElement('a');
     link.href = '/resume.pdf';
-    link.download = 'Gunasree_Resume.pdf';
+    link.download = 'GUNASREE_R_RESUME.pdf';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
