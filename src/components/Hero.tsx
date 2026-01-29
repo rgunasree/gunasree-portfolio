@@ -1,7 +1,19 @@
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { ChevronDown, Sparkles, Download } from 'lucide-react';
+import { useRef } from 'react';
 
 export default function Hero() {
+  const ref = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: ref,
+    offset: ["start start", "end start"]
+  });
+
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const textY = useTransform(scrollYProgress, [0, 1], [0, 100]);
+  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
   const scrollToAbout = () => {
     const element = document.querySelector('#about');
     if (element) {
@@ -19,13 +31,22 @@ export default function Hero() {
   };
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+    <section ref={ref} className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute w-96 h-96 -top-48 -left-48 bg-blue-500/20 rounded-full blur-3xl animate-pulse" />
-        <div className="absolute w-96 h-96 -bottom-48 -right-48 bg-cyan-500/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+        <motion.div
+          style={{ y: y1 }}
+          className="absolute w-96 h-96 -top-48 -left-48 bg-blue-500/20 rounded-full blur-3xl animate-pulse"
+        />
+        <motion.div
+          style={{ y: y2 }}
+          className="absolute w-96 h-96 -bottom-48 -right-48 bg-cyan-500/20 rounded-full blur-3xl animate-pulse"
+        />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <motion.div
+        style={{ y: textY, opacity }}
+        className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"
+      >
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -50,13 +71,29 @@ export default function Hero() {
         </motion.div>
 
         <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6"
         >
-          <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent">
-            R. Gunasree
+          <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent inline-block">
+            {Array.from("R. Gunasree").map((char, index) => (
+              <motion.span
+                key={index}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.5,
+                  delay: 0.4 + index * 0.1,
+                  type: "spring",
+                  stiffness: 100
+                }}
+                className="inline-block"
+                style={{ marginRight: char === " " ? "0.5em" : "0" }}
+              >
+                {char}
+              </motion.span>
+            ))}
           </span>
         </motion.h1>
 
@@ -114,7 +151,7 @@ export default function Hero() {
             <ChevronDown size={32} />
           </motion.button>
         </motion.div>
-      </div>
+      </motion.div>
 
       <div className="absolute inset-0 pointer-events-none">
         {[...Array(20)].map((_, i) => (

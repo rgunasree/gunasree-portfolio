@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import { useRef } from 'react';
 
 const skillCategories = [
   {
@@ -51,6 +52,80 @@ const skillCategories = [
   },
 ];
 
+function SkillCard({ category, index }: { category: typeof skillCategories[0], index: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseX = useSpring(x, { stiffness: 500, damping: 100 });
+  const mouseY = useSpring(y, { stiffness: 500, damping: 100 });
+
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], ["5deg", "-5deg"]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], ["-5deg", "5deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!ref.current) return;
+
+    const rect = ref.current.getBoundingClientRect();
+
+    const width = rect.width;
+    const height = rect.height;
+
+    const mouseXFromCenter = e.clientX - rect.left - width / 2;
+    const mouseYFromCenter = e.clientY - rect.top - height / 2;
+
+    x.set(mouseXFromCenter / width);
+    y.set(mouseYFromCenter / height);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      ref={ref}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d",
+      }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm p-8 rounded-2xl border border-blue-500/20 hover:border-cyan-400/50 transition-all perspective-1000"
+    >
+      <h3 className={`text-2xl font-bold mb-6 bg-gradient-to-r ${category.color} bg-clip-text text-transparent`} style={{ transform: "translateZ(20px)" }}>
+        {category.title}
+      </h3>
+      <div className="space-y-5" style={{ transform: "translateZ(10px)" }}>
+        {category.skills.map((skill, skillIndex) => (
+          <div key={skill.name}>
+            <div className="flex justify-between mb-2">
+              <span className="text-gray-300 font-medium">{skill.name}</span>
+              <span className="text-cyan-400 font-semibold">{skill.level}%</span>
+            </div>
+            <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
+              <motion.div
+                initial={{ width: 0 }}
+                whileInView={{ width: `${skill.level}%` }}
+                viewport={{ once: true }}
+                transition={{ duration: 1, delay: skillIndex * 0.1 }}
+                className={`h-full bg-gradient-to-r ${category.color} rounded-full`}
+              />
+            </div>
+          </div>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
 export default function Skills() {
   return (
     <section id="skills" className="py-20 relative">
@@ -72,37 +147,7 @@ export default function Skills() {
 
         <div className="grid md:grid-cols-2 gap-8">
           {skillCategories.map((category, categoryIndex) => (
-            <motion.div
-              key={category.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: categoryIndex * 0.1 }}
-              className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm p-8 rounded-2xl border border-blue-500/20 hover:border-cyan-400/50 transition-all"
-            >
-              <h3 className={`text-2xl font-bold mb-6 bg-gradient-to-r ${category.color} bg-clip-text text-transparent`}>
-                {category.title}
-              </h3>
-              <div className="space-y-5">
-                {category.skills.map((skill, skillIndex) => (
-                  <div key={skill.name}>
-                    <div className="flex justify-between mb-2">
-                      <span className="text-gray-300 font-medium">{skill.name}</span>
-                      <span className="text-cyan-400 font-semibold">{skill.level}%</span>
-                    </div>
-                    <div className="h-2 bg-slate-700/50 rounded-full overflow-hidden">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        whileInView={{ width: `${skill.level}%` }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 1, delay: skillIndex * 0.1 }}
-                        className={`h-full bg-gradient-to-r ${category.color} rounded-full`}
-                      />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
+            <SkillCard key={category.title} category={category} index={categoryIndex} />
           ))}
         </div>
 
