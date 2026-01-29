@@ -15,7 +15,7 @@ export default function FluidBackground() {
 
     let mouseX = canvas.width / 2;
     let mouseY = canvas.height / 2;
-    let particles: Particle[] = [];
+    const particles: Particle[] = [];
 
     let time = 0;
 
