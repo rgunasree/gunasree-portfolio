@@ -8,6 +8,7 @@
   --smurf-dark: #0055aa;
 }
 
+html,
 body {
   @apply bg-slate-900 text-white overflow-x-hidden;
   background: radial-gradient(circle at top left, #1e293b, #0f172a);
