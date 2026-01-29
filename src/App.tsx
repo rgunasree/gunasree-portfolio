@@ -5,7 +5,6 @@ import Navigation from './components/Navigation';
 import Hero from './components/Hero';
 import NeuralNetworkEasterEgg from './components/NeuralNetworkEasterEgg';
 import ScrollProgress from './components/ScrollProgress';
-import KudosButton from './components/KudosButton';
 
 const About = lazy(() => import('./components/About'));
 const Skills = lazy(() => import('./components/Skills'));
@@ -18,7 +17,6 @@ function App() {
     <div className="relative min-h-screen text-white">
       <SpeedInsights />
       <ScrollProgress />
-      <KudosButton />
       <FluidBackground />
       <Navigation />
       <Hero />
