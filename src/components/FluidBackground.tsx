@@ -33,7 +33,7 @@ export default function FluidBackground() {
         this.y = y;
         this.vx = (Math.random() - 0.5) * 0.5;
         this.vy = (Math.random() - 0.5) * 0.5;
-        this.radius = Math.random() * 2 + 1;
+        this.radius = Math.random() * 3 + 2;
         this.opacity = Math.random() * 0.5 + 0.3;
         this.color = `rgba(${Math.random() * 100 + 100}, ${Math.random() * 100 + 150}, 255, ${this.opacity})`;
       }
@@ -66,7 +66,7 @@ export default function FluidBackground() {
       }
     }
 
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 50; i++) {
       particles.push(
         new Particle(
           Math.random() * canvas.width,
@@ -76,7 +76,7 @@ export default function FluidBackground() {
     }
 
     const animate = () => {
-      ctx.fillStyle = 'rgba(10, 10, 20, 0.1)';
+      ctx.fillStyle = 'rgba(10, 10, 20, 0.2)'; // Increased trail fade slightly for better perf perception
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       time += 0.01; // Increment time for animation

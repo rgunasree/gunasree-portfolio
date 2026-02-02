@@ -23,7 +23,12 @@ export default function Hero() {
 
   const handleDownloadResume = () => {
     const link = document.createElement('a');
-    link.href = '/resume.pdf';
+    // Use BASE_URL to ensure correct pathing (e.g. for GitHub Pages)
+    const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+      ? import.meta.env.BASE_URL
+      : `${import.meta.env.BASE_URL}/`;
+
+    link.href = `${baseUrl}GUNASREE_R_RESUME.pdf`;
     link.download = 'GUNASREE_R_RESUME.pdf';
     document.body.appendChild(link);
     link.click();
@@ -50,7 +55,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
           className="mb-6"
         >
           <motion.div
@@ -73,18 +78,18 @@ export default function Hero() {
         <motion.h1
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
+          transition={{ duration: 0.8, delay: 0.1 }}
           className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6"
         >
           <span className="bg-gradient-to-r from-blue-400 via-cyan-400 to-teal-400 bg-clip-text text-transparent inline-block">
-            {Array.from("R. Gunasree").map((char, index) => (
+            {Array.from("Gunasree").map((char, index) => (
               <motion.span
                 key={index}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
                   duration: 0.5,
-                  delay: 0.4 + index * 0.1,
+                  delay: 0.1 + index * 0.05,
                   type: "spring",
                   stiffness: 100
                 }}
@@ -100,7 +105,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.6 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
           className="mb-8"
         >
           <h2 className="text-2xl sm:text-3xl md:text-4xl text-gray-300 mb-4 font-light">
@@ -114,7 +119,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.8 }}
+          transition={{ duration: 0.8, delay: 0.4 }}
           className="flex flex-col sm:flex-row gap-4 justify-center items-center"
         >
           <motion.button
@@ -139,7 +144,7 @@ export default function Hero() {
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 1.2 }}
+          transition={{ duration: 1, delay: 0.6 }}
           className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
         >
           <motion.button
