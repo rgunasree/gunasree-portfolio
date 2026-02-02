@@ -48,7 +48,7 @@ export default function Navigation() {
             className="flex-shrink-0"
           >
             <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Gunasree's Portfolio
+              Gunasree's
             </span>
           </motion.div>
 
@@ -77,7 +77,7 @@ export default function Navigation() {
                 <Github size={20} />
               </motion.a>
               <motion.a
-                href="https://linkedin.com/in/gunasree"
+                href="https://www.linkedin.com/in/gunasree-r-55024224a/"
                 target="_blank"
                 rel="noopener noreferrer"
                 whileHover={{ scale: 1.1, rotate: -5 }}
@@ -136,7 +136,7 @@ export default function Navigation() {
                   <Github size={20} />
                 </a>
                 <a
-                  href="https://linkedin.com/in/gunasree"
+                  href="https://www.linkedin.com/in/gunasree-r-55024224a/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-300 hover:text-cyan-400"

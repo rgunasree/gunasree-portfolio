@@ -12,8 +12,8 @@ const contactMethods = [
   {
     icon: Linkedin,
     label: 'LinkedIn',
-    value: 'linkedin.com/in/gunasree',
-    href: 'https://linkedin.com/in/gunasree',
+    value: 'linkedin.com/in/gunasree-r-55024224a',
+    href: 'https://www.linkedin.com/in/gunasree-r-55024224a/',
     color: 'from-cyan-500 to-teal-500',
   },
   {
