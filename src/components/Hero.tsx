@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform } from 'framer-motion';
-import { ChevronDown, Sparkles, Download } from 'lucide-react';
+import { ChevronDown, Sparkles, Download, Linkedin } from 'lucide-react';
 import { useRef } from 'react';
 
 export default function Hero() {
@@ -72,6 +72,9 @@ export default function Hero() {
           >
             <Sparkles className="w-4 h-4 text-cyan-400" />
             <span className="text-sm text-gray-300">Available for hire</span>
+            <a href="https://www.linkedin.com/in/gunasree-r-55024224a" target="_blank" rel="noopener noreferrer" className="bg-white/10 p-2 rounded-full hover:bg-white/20 transition-colors ml-2">
+              <Linkedin className="w-4 h-4 text-blue-400" />
+            </a>
           </motion.div>
         </motion.div>
 
