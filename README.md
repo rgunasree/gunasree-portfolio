@@ -1,76 +1,63 @@
-# Animated AI/ML Portfolio
+# GUNASREE.AI | AI Engineering Portfolio
 
-A modern, interactive portfolio website built with React, TypeScript, and Tailwind CSS, featuring fluid animations and a neural network visualization.
+A high-performance, immersive portfolio showcasing production-grade AI/ML solutions, architected with **React 18**, **TypeScript**, and **Three.js**. Optimized for **Vercel Speed Insights** and precision-engineered for 2026 security standards.
 
-## 🚀 Features
+![Portfolio Preview](https://github.com/rgunasree/gunasree-portfolio/raw/main/public/images/preview_mockup.png)
 
-- **Fluid Animations**: Smooth transitions and interactive elements powered by Framer Motion.
-- **Responsive Design**: Fully responsive layout that looks great on all devices.
-- **Interactive Background**: Dynamic fluid background that reacts to user interaction.
-- **Neural Network Visualization**: A hidden Easter egg showcasing a live neural network simulation.
-- **Modern UI/UX**: Clean, professional design with a focus on AI and Machine Learning aesthetics.
+## 🚀 Key Highlights
 
-## 🛠️ Tech Stack
+- **🧠 Production AI Showcase**: Featuring **TaskNerve** (GCC Orchestration) and **Crowd Guardian** (Edge-AI Crowd Safety).
+- **🌐 3D Interactive Visuals**: Custom Three.js wireframe sphere with mouse-tracking and real-time shader modulation.
+- **⚡ Performance First**: Optimized for LCP (<2.0s goal) using component lazy loading, image prioritization, and code splitting.
+- **🛰️ Intelligent Navigation**: Intersection Observer-driven menu highlighting and smooth planet-hopping scrolling.
+- **✨ Neural Network Easter Egg**: Interactive hidden simulation (Toggle with `Ctrl + Shift + N`).
+- **🛡️ Secure Stack**: Zero-vulnerability dependency management (fixed Rollup, Flatted, and Picomatch ReDoS alerts).
 
-- **Framework**: [React](https://react.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Build Tool**: [Vite](https://vitejs.dev/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/)
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)
-- **Icons**: [Lucide React](https://lucide.dev/)
-- **Charts**: [Recharts](https://recharts.org/)
+## 🛠️ Technology Stack
 
-## 📦 Installation
+| Category | Technologies |
+| :--- | :--- |
+| **Core** | React 18, Vite, TypeScript |
+| **3D & Animation** | Three.js, Framer Motion |
+| **Styling** | Tailwind CSS, Lucide Icons |
+| **Data Viz** | Recharts, Project-Specific Metrics |
+| **Deployment** | Vercel (Speed Insights + Analytics) |
+| **Backend/AI** | Supabase, TensorFlow.js (Edge-AI), Groq LPU |
 
-1.  **Clone the repository**
+## 📦 Project Portfolio
 
-    ```bash
-    git clone <repository-url>
-    cd portfolio
-    ```
+### 1. TaskNerve (Governance-First Orchestration)
+Intelligent platform for GCCs that solves the "Governance Paradox"—oversight without micromanagement. 
+- **Tech**: Next.js 16, Supabase RLS, Al-Predictive SLA detection.
+- [GitHub](https://github.com/rgunasree/TaskNerve) | [Live Demo](https://task-nerve.vercel.app)
 
-2.  **Install dependencies**
+### 2. Crowd Guardian (Smart Crowd AI)
+Edge AI-Powered Real-Time Stampede Prevention using Computer Vision.
+- **Tech**: TensorFlow.js, WebSocket Bus, SRI Algorithm.
+- [GitHub](https://github.com/rgunasree/crowd-guardian) | [Live Demo](https://crowd-guardian-kappa.vercel.app)
 
-    ```bash
-    npm install
-    ```
+### 3. FairAssess.ai (Bias Detection)
+Transformer-based bias detection for enterprise hiring. 
+- **Impact**: 52% boost in candidate diversity.
 
-3.  **Start the development server**
+## ⚙️ Installation & Development
 
-    ```bash
-    npm run dev
-    ```
+1. **Clone & Install**
+   ```bash
+   git clone https://github.com/rgunasree/gunasree-portfolio.git
+   cd gunasree-portfolio
+   npm install
+   ```
 
-4.  **Build for production**
+2. **Run Development**
+   ```bash
+   npm run dev
+   ```
 
-    ```bash
-    npm run build
-    ```
-
-## 🎮 Usage
-
-- **Navigation**: Use the top navigation bar to jump to different sections (About, Skills, Projects, Contact).
-- **Easter Egg**: Press `Ctrl + Shift + N` to toggle the hidden Neural Network visualization.
-
-## 📁 Project Structure
-
-```
-src/
-├── components/         # React components
-│   ├── About.tsx
-│   ├── Contact.tsx
-│   ├── FluidBackground.tsx
-│   ├── Hero.tsx
-│   ├── Navigation.tsx
-│   ├── NeuralNetworkEasterEgg.tsx
-│   ├── ProjectImpactChart.tsx
-│   ├── Projects.tsx
-│   └── Skills.tsx
-├── App.tsx            # Main application component
-├── main.tsx           # Entry point
-└── index.css          # Global styles and Tailwind directives
-```
+3. **Build & Optimize**
+   ```bash
+   npm run build
+   ```
 
 ## 📄 License
-
-This project is licensed under the MIT License.
+MIT © 2026 R. Gunasree. Crafted with passion for AI innovation.
