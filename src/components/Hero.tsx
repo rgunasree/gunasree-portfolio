@@ -1,5 +1,6 @@
-import { useEffect, useRef, useState } from 'react';
-import ProfileSphere from './ProfileSphere';
+import { useEffect, useRef, useState, lazy, Suspense } from 'react';
+
+const ProfileSphere = lazy(() => import('./ProfileSphere'));
 
 const BIOS = [
   'Specializing in <strong>LLMs, RAG Pipelines, and IoT Analytics</strong>. Merging predictive modeling with production-grade engineering.',
@@ -66,7 +67,9 @@ export default function Hero() {
       style={{ paddingTop: '4rem' }}
     >
       {/* 3D Sphere - positioned behind profile pic area */}
-      <ProfileSphere />
+      <Suspense fallback={null}>
+        <ProfileSphere />
+      </Suspense>
 
       {/* SYSTEM ONLINE badge */}
       <div
@@ -78,20 +81,21 @@ export default function Hero() {
 
       {/* Profile picture - no glow, clean border */}
       <div className="relative flex items-center justify-center mb-6" style={{ zIndex: 2 }}>
-        <img
-          src="/profile.png"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              'https://ui-avatars.com/api/?name=Gunasree+R&background=0D8ABC&color=fff&size=256';
-          }}
-          alt="Gunasree R"
-          className="relative rounded-full object-cover border-4"
-          style={{
-            width: 200,
-            height: 200,
-            borderColor: 'rgba(255,255,255,0.1)',
-          }}
-        />
+          <img
+            src="/profile.png"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src =
+                'https://ui-avatars.com/api/?name=Gunasree+R&background=0D8ABC&color=fff&size=256';
+            }}
+            alt="Gunasree R"
+            className="relative rounded-full object-cover border-4"
+            style={{
+              width: 200,
+              height: 200,
+              borderColor: 'rgba(255,255,255,0.1)',
+            }}
+            fetchPriority="high"
+          />
       </div>
 
       {/* Name */}
