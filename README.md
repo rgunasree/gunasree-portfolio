@@ -2,7 +2,7 @@
 
 A high-performance, immersive portfolio showcasing production-grade AI/ML solutions, architected with **React 18**, **TypeScript**, and **Three.js**. Optimized for **Vercel Speed Insights** and precision-engineered for 2026 security standards.
 
-![Portfolio Preview](https://github.com/rgunasree/gunasree-portfolio/raw/main/public/images/preview_mockup.png)
+![Portfolio Preview](https://github.com/rgunasree/gunasree-portfolio/raw/main/public/images/portfolio_preview.png)
 
 ## 🚀 Key Highlights
 
