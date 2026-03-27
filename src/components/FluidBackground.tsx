@@ -57,8 +57,26 @@ export default function FluidBackground() {
 
     let animationId: number;
     let time = 0;
+    let lastExecuted = Date.now();
 
     const animate = () => {
+      // Pause animation if tab is hidden to save resources
+      if (document.hidden) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
+
+      const now = Date.now();
+      const delta = now - lastExecuted;
+
+      // Throttle for background performance (capped at ~60fps, but can be higher on high-hz screens)
+      // On mobile we could cap it even lower if needed
+      if (delta < 15) {
+        animationId = requestAnimationFrame(animate);
+        return;
+      }
+      lastExecuted = now;
+
       animationId = requestAnimationFrame(animate);
       time += 0.01;
 

@@ -22,7 +22,7 @@ export default function ProfileSphere() {
     renderer.domElement.style.pointerEvents = 'none';
     container.appendChild(renderer.domElement);
 
-    const geometry = new THREE.IcosahedronGeometry(2, 60);
+    const geometry = new THREE.IcosahedronGeometry(2, 15);
     const material = new THREE.ShaderMaterial({
       vertexShader: `
         uniform float uTime;
