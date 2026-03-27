@@ -10,125 +10,155 @@ export default function FluidBackground() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
 
-    let mouseX = canvas.width / 2;
-    let mouseY = canvas.height / 2;
-    const particles: Particle[] = [];
+    // Mouse state
+    const mouse = { x: width / 2, y: height / 2 };
+    const lastMouse = { x: width / 2, y: height / 2 };
 
-    let time = 0;
+    const cometColor = { r: 6, g: 182, b: 212 }; // Cyan
+    const spinners = [
+      { angle: 0, radius: 20, speed: 0.15, size: 3 },
+      { angle: Math.PI, radius: 20, speed: 0.15, size: 3 },
+      { angle: Math.PI / 2, radius: 35, speed: -0.1, size: 2 },
+    ];
+    const particles: { x: number; y: number; vx: number; vy: number; life: number; size: number }[] = [];
 
-    class Particle {
-      x: number;
-      y: number;
-      vx: number;
-      vy: number;
-      radius: number;
-      color: string;
-      opacity: number;
-
-      constructor(x: number, y: number) {
-        this.x = x;
-        this.y = y;
-        this.vx = (Math.random() - 0.5) * 0.5;
-        this.vy = (Math.random() - 0.5) * 0.5;
-        this.radius = Math.random() * 3 + 2;
-        this.opacity = Math.random() * 0.5 + 0.3;
-        this.color = `rgba(${Math.random() * 100 + 100}, ${Math.random() * 100 + 150}, 255, ${this.opacity})`;
-      }
-
-      update() {
-        const dx = mouseX - this.x;
-        const dy = mouseY - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        const force = Math.min(100 / distance, 2);
-
-        this.vx += (dx / distance) * force * 0.01;
-        this.vy += (dy / distance) * force * 0.01;
-
-        this.vx *= 0.95;
-        this.vy *= 0.95;
-
-        this.x += this.vx;
-        this.y += this.vy;
-
-        if (this.x < 0 || this.x > canvas!.width) this.vx *= -1;
-        if (this.y < 0 || this.y > canvas!.height) this.vy *= -1;
-      }
-
-      draw() {
-        if (!ctx) return;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-        ctx.fillStyle = this.color;
-        ctx.fill();
-      }
-    }
-
-    for (let i = 0; i < 50; i++) {
-      particles.push(
-        new Particle(
-          Math.random() * canvas.width,
-          Math.random() * canvas.height
-        )
-      );
-    }
-
-    const animate = () => {
-      ctx.fillStyle = 'rgba(10, 10, 20, 0.2)'; // Increased trail fade slightly for better perf perception
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      time += 0.01; // Increment time for animation
-
-      particles.forEach((particle, i) => {
-        particle.update();
-        particle.draw();
-
-        // Smurf Theme Colors
-        // Primary: #00d7ff (RGB: 0, 215, 255)
-        // Secondary: #88CCFF (RGB: 136, 204, 255)
-        // Dark: #0055aa (RGB: 0, 85, 170)
-
-        const gradient = ctx.createRadialGradient(
-          particle.x,
-          particle.y,
-          0,
-          particle.x,
-          particle.y,
-          particle.radius * (1 + Math.sin(time * 2 + i) * 0.2)
-        );
-
-        // Use Smurf blue palette with varying opacities
-        gradient.addColorStop(0, `rgba(0, 215, 255, ${0.15 * particle.opacity})`); // Bright Smurf Blue
-        gradient.addColorStop(0.5, `rgba(136, 204, 255, ${0.1 * particle.opacity})`); // Light Blue
-        gradient.addColorStop(1, 'rgba(0, 85, 170, 0)'); // Dark Blue fade out
-
-        ctx.fillStyle = gradient;
-        ctx.beginPath();
-        ctx.arc(particle.x, particle.y, particle.radius * 2, 0, Math.PI * 2);
-        ctx.fill();
-      });
-
-      requestAnimationFrame(animate);
-    };
-
-    animate();
+    // Space background stars
+    let stars = Array.from({ length: 400 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: Math.random() * 1.5 + 0.2,
+      z: Math.random() * 0.8 + 0.2,
+      alpha: Math.random() * 0.6 + 0.1,
+    }));
 
     const handleMouseMove = (e: MouseEvent) => {
-      mouseX = e.clientX;
-      mouseY = e.clientY;
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
     };
 
     const handleResize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+
+      stars = Array.from({ length: 400 }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        size: Math.random() * 1.5 + 0.2,
+        z: Math.random() * 0.8 + 0.2,
+        alpha: Math.random() * 0.6 + 0.1,
+      }));
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     window.addEventListener('resize', handleResize);
 
+    let animationId: number;
+    let time = 0;
+
+    const animate = () => {
+      animationId = requestAnimationFrame(animate);
+      time += 0.01;
+
+      // Detect if light theme is active
+      const isLight = document.documentElement.classList.contains('light');
+
+      // Trail fade – clears previous frame with semi-transparent overlay
+      if (isLight) {
+        ctx.fillStyle = 'rgba(248, 250, 252, 0.15)';
+      } else {
+        ctx.fillStyle = 'rgba(5, 5, 5, 0.15)';
+      }
+      ctx.fillRect(0, 0, width, height);
+
+      // Parallax offsets based on mouse distance from center
+      const parallaxX = (mouse.x - width / 2) * 0.05;
+      const parallaxY = (mouse.y - height / 2) * 0.05;
+
+      // Draw starry space background
+      stars.forEach(star => {
+        let drawX = (star.x - parallaxX * star.z) % width;
+        let drawY = (star.y - parallaxY * star.z) % height;
+        if (drawX < 0) drawX += width;
+        if (drawY < 0) drawY += height;
+
+        ctx.beginPath();
+        ctx.arc(drawX, drawY, star.size, 0, Math.PI * 2);
+        const twinkle = Math.sin(time * 5 + star.x) * 0.3 + 0.7;
+        if (isLight) {
+          ctx.fillStyle = `rgba(100, 116, 139, ${star.alpha * twinkle})`;
+        } else {
+          ctx.fillStyle = `rgba(255, 255, 255, ${star.alpha * twinkle})`;
+        }
+        ctx.fill();
+      });
+
+      // Draw rotating shooting-star head / spinners around mouse
+      spinners.forEach(spinner => {
+        spinner.angle += spinner.speed;
+        const sx = mouse.x + Math.cos(spinner.angle) * spinner.radius;
+        const sy = mouse.y + Math.sin(spinner.angle) * spinner.radius;
+
+        ctx.beginPath();
+        ctx.arc(sx, sy, spinner.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${cometColor.r}, ${cometColor.g}, ${cometColor.b}, 0.8)`;
+        ctx.fill();
+      });
+
+      // Bright core at mouse pos
+      ctx.beginPath();
+      ctx.arc(mouse.x, mouse.y, 4, 0, Math.PI * 2);
+      ctx.fillStyle = isLight ? 'rgba(6, 182, 212, 1)' : 'rgba(255, 255, 255, 1)';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = `rgba(${cometColor.r}, ${cometColor.g}, ${cometColor.b}, 1)`;
+      ctx.fill();
+      ctx.shadowBlur = 0;
+
+      // Emit particles
+      const speed = Math.sqrt(
+        Math.pow(mouse.x - lastMouse.x, 2) + Math.pow(mouse.y - lastMouse.y, 2)
+      );
+      const count = Math.min(speed * 0.5, 6) + 1;
+
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: mouse.x + (Math.random() - 0.5) * 8,
+          y: mouse.y + (Math.random() - 0.5) * 8,
+          vx: (Math.random() - 0.5) * 1.5,
+          vy: (Math.random() - 0.5) * 1.5,
+          life: 1.0,
+          size: Math.random() * 2 + 1,
+        });
+      }
+
+      lastMouse.x += (mouse.x - lastMouse.x) * 0.15;
+      lastMouse.y += (mouse.y - lastMouse.y) * 0.15;
+
+      // Draw & update trailing particles
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.x += p.vx - parallaxX * 0.05;
+        p.y += p.vy - parallaxY * 0.05;
+        p.life -= 0.015;
+
+        if (p.life <= 0) {
+          particles.splice(i, 1);
+          continue;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${cometColor.r}, ${cometColor.g}, ${cometColor.b}, ${p.life * 0.7})`;
+        ctx.fill();
+      }
+    };
+
+    animate();
+
     return () => {
+      cancelAnimationFrame(animationId);
       window.removeEventListener('mousemove', handleMouseMove);
       window.removeEventListener('resize', handleResize);
     };
@@ -137,7 +167,8 @@ export default function FluidBackground() {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full -z-10 bg-space-gradient"
+      className="fixed top-0 left-0 w-full h-full"
+      style={{ zIndex: 0 }}
     />
   );
 }

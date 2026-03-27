@@ -1,111 +1,112 @@
 import { motion } from 'framer-motion';
-import { Brain, Code2, Lightbulb, TrendingUp } from 'lucide-react';
 
-const highlights = [
+const EXPERIENCES = [
   {
-    icon: Brain,
-    title: 'AI/ML Expertise',
-    description: 'Deep learning, NLP, and predictive modeling',
+    title: 'AI Engineer',
+    company: 'Ausweg Info Control Pvt Ltd',
+    date: 'Jul 2025 - Jan 2026',
+    bullets: [
+      'Built LLM chatbot for EMS, automating support workflows.',
+      'Engineered RAG pipelines boosting accuracy by 72%.',
+      'Integrated IoT telemetry reducing data lookup time by 60%.',
+    ],
+    color: '#06b6d4',
   },
   {
-    icon: Code2,
-    title: 'Full-Stack Development',
-    description: 'End-to-end product development with modern frameworks',
+    title: 'Data Analyst',
+    company: 'Ausweg Info Control Pvt Ltd',
+    date: 'Aug 2024 - Dec 2024',
+    bullets: [
+      'Optimized MQTT IIoT pipelines (38% more stable).',
+      'Enhanced real-time production visibility by 32%.',
+      'Reduced data ingestion latency by 25%.',
+    ],
+    color: '#a855f7',
   },
   {
-    icon: Lightbulb,
-    title: 'Problem Solver',
-    description: 'Creative solutions for complex technical challenges',
-  },
-  {
-    icon: TrendingUp,
-    title: 'Impact-Driven',
-    description: 'Focus on measurable results and business value',
+    title: 'ML Intern',
+    company: 'Corizo Pvt Ltd',
+    date: 'Jun 2023',
+    bullets: [
+      'Designed RNN/LSTM models for stock prediction (+24% acc).',
+      'Reduced model training time by 33% via pipeline optimization.',
+      'Built wine-quality prediction models.',
+    ],
+    color: '#4ade80',
   },
 ];
 
-export default function About() {
+export default function Experience() {
   return (
-    <section id="about" className="py-20 relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
+    <section id="experience" className="py-24 relative overflow-hidden">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.h2
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-3xl md:text-5xl font-black text-white mb-16 flex items-center gap-4 uppercase tracking-widest"
+          style={{ fontFamily: 'Inter, sans-serif' }}
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              About Me
-            </span>
-          </h2>
-          <div className="h-1 w-20 bg-gradient-to-r from-blue-400 to-cyan-400 mx-auto rounded-full" />
-        </motion.div>
+          <span className="w-2 md:w-3 h-10 md:h-12 bg-cyan-500 block rounded-r-lg" />
+          CAREER IMPACT
+        </motion.h2>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-center mb-16">
-          <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6"
-          >
-            <div className="prose prose-invert max-w-none">
-              <p className="text-lg text-gray-300 leading-relaxed">
-                I'm a driven AI/ML enthusiast with a <span className="text-cyan-400 font-semibold">CGPA of 8.1</span>, passionate about transforming data into actionable insights and building intelligent systems that create measurable impact. My journey in artificial intelligence is fueled by curiosity and a commitment to continuous learning.
-              </p>
-              <p className="text-lg text-gray-300 leading-relaxed">
-                I specialize in developing <span className="text-cyan-400 font-semibold">production-ready AI solutions</span> that solve real-world problems. From bias detection platforms achieving <span className="text-cyan-400 font-semibold">43% diversity improvements</span> to real-time recommendation systems with <span className="text-cyan-400 font-semibold">sub-500ms response times</span>, I focus on creating systems that deliver tangible business value.
-              </p>
-              <p className="text-lg text-gray-300 leading-relaxed">
-                My technical toolkit spans modern frameworks like <span className="text-cyan-400 font-semibold">Python, TensorFlow, PyTorch, Next.js, and TypeScript</span>. I excel at bridging the gap between cutting-edge AI research and practical, scalable applications. Whether it's fine-tuning LLMs, optimizing NLP pipelines, or building intuitive data dashboards, I bring both technical depth and product thinking to every project.
-              </p>
-              <p className="text-lg text-gray-300 leading-relaxed">
-                I thrive in fast-paced environments where innovation meets impact. As a quick learner and collaborative team player, I'm eager to contribute to organizations pushing the boundaries of what's possible with AI and data science.
-              </p>
-            </div>
-          </motion.div>
+        <div className="relative border-l-2 border-slate-800 ml-4 md:ml-8">
+          {EXPERIENCES.map((exp, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              className="mb-12 relative pl-8 md:pl-12"
+            >
+              {/* Timeline dot */}
+              <div
+                className="absolute w-5 h-5 rounded-full z-10 -left-[11px] top-1"
+                style={{
+                  backgroundColor: exp.color,
+                  boxShadow: `0 0 15px ${exp.color}80, 0 0 30px ${exp.color}40`,
+                  border: '3px solid #050505',
+                }}
+              />
 
-          <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="grid grid-cols-2 gap-6"
-          >
-            {highlights.map((item, index) => (
-              <motion.div
-                key={item.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.05, rotate: 2 }}
-                className="bg-gradient-to-br from-slate-800/50 to-slate-900/50 backdrop-blur-sm p-6 rounded-2xl border border-blue-500/20 hover:border-cyan-400/50 transition-all"
+              <div
+                className="bg-slate-900/50 backdrop-blur-md rounded-2xl p-6 md:p-8 border hover:-translate-y-1 transition-transform"
+                style={{ borderColor: 'rgba(255,255,255,0.05)' }}
               >
-                <item.icon className="w-8 h-8 text-cyan-400 mb-3" />
-                <h3 className="text-white font-semibold mb-2">{item.title}</h3>
-                <p className="text-gray-400 text-sm">{item.description}</p>
-              </motion.div>
-            ))}
-          </motion.div>
-        </div>
+                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 gap-2">
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-1">{exp.title}</h3>
+                    <div
+                      className="text-sm font-semibold tracking-widest uppercase"
+                      style={{ color: exp.color, fontFamily: 'JetBrains Mono, monospace' }}
+                    >
+                      {exp.company}
+                    </div>
+                  </div>
+                  <div
+                    className="text-xs text-gray-400 border border-white/10 px-3 py-1.5 rounded-full inline-block mt-2 md:mt-0"
+                    style={{ fontFamily: 'JetBrains Mono, monospace' }}
+                  >
+                    {exp.date}
+                  </div>
+                </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 rounded-3xl p-8 border border-blue-500/20"
-        >
-          <h3 className="text-2xl font-bold text-white mb-4 text-center">
-            What Drives Me
-          </h3>
-          <p className="text-gray-300 text-center max-w-3xl mx-auto leading-relaxed">
-            I believe AI should augment human capabilities and drive positive change. Every line of code I write, every model I train, and every insight I uncover is aimed at creating systems that are not just technically excellent, but also ethical, accessible, and transformative for the people who use them.
-          </p>
-        </motion.div>
+                <ul className="space-y-3 mt-4 text-gray-300">
+                  {exp.bullets.map((bullet, i) => (
+                    <li key={i} className="flex gap-3 text-sm md:text-base">
+                      <span className="shrink-0 mt-1" style={{ color: exp.color }}>
+                        ✦
+                      </span>
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
+          ))}
+        </div>
       </div>
     </section>
   );

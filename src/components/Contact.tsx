@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Mail, Linkedin, Github, MapPin, Send } from 'lucide-react';
+import { Mail, Linkedin, Github, MapPin, Send, Instagram } from 'lucide-react';
 
 const contactMethods = [
   {
@@ -24,9 +24,16 @@ const contactMethods = [
     color: 'from-teal-500 to-emerald-500',
   },
   {
+    icon: Instagram,
+    label: 'Instagram',
+    value: '@gunasree__r',
+    href: 'https://www.instagram.com/gunasree__r/',
+    color: 'from-pink-500 to-rose-500',
+  },
+  {
     icon: MapPin,
     label: 'Location',
-    value: 'Open to Remote & Relocation',
+    value: 'Salem, Tamil Nadu, India',
     color: 'from-emerald-500 to-green-500',
   },
 ];
@@ -53,7 +60,7 @@ export default function Contact() {
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid md:grid-cols-3 lg:grid-cols-5 gap-6 mb-12">
           {contactMethods.map((method, index) => (
             <motion.div
               key={method.label}

@@ -1,24 +1,58 @@
 import { useState, useEffect } from 'react';
-import { Menu, X, Github, Linkedin, Mail } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const navItems = [
-  { label: 'About', href: '#about' },
-  { label: 'Skills', href: '#skills' },
-  { label: 'Projects', href: '#projects' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'HOME', href: '#home' },
+  { label: 'EXPERIENCE', href: '#experience' },
+  { label: 'PROJECTS', href: '#projects' },
+  { label: 'AWARDS', href: '#awards' },
+  { label: 'STACK', href: '#skills' },
+  { label: 'CONTACT', href: '#contact' },
 ];
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('home');
+  const [isDark, setIsDark] = useState(() => !document.documentElement.classList.contains('light'));
 
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
+    if (isDark) {
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+    }
+  }, [isDark]);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    const observerOptions = {
+      root: null,
+      rootMargin: '-20% 0px -70% 0px',
+      threshold: 0
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    const sections = ['home', 'experience', 'projects', 'awards', 'skills', 'contact'];
+    sections.forEach((id) => {
+      const element = document.getElementById(id);
+      if (element) observer.observe(element);
+    });
+
+    return () => observer.disconnect();
   }, []);
 
   const scrollToSection = (href: string) => {
@@ -29,131 +63,123 @@ export default function Navigation() {
     }
   };
 
+
+
   return (
-    <motion.nav
-      initial={{ y: -100 }}
-      animate={{ y: 0 }}
-      transition={{ duration: 0.5 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled
-        ? 'bg-slate-900/95 backdrop-blur-md shadow-lg'
-        : 'bg-transparent'
-        }`}
+    <nav
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        background: isScrolled ? 'rgba(5,5,5,0.92)' : 'transparent',
+        backdropFilter: isScrolled ? 'blur(12px)' : 'none',
+        borderBottom: isScrolled ? '1px solid rgba(6,182,212,0.15)' : '1px solid transparent',
+      }}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="flex-shrink-0"
+          {/* Logo */}
+          <div
+            className="font-bold text-white tracking-widest"
+            style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '1rem' }}
           >
-            <span className="text-2xl font-bold bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
-              Gunasree's
-            </span>
-          </motion.div>
-
-          <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item, index) => (
-              <motion.button
-                key={item.href}
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 * index }}
-                onClick={() => scrollToSection(item.href)}
-                className="text-gray-300 hover:text-cyan-400 transition-colors duration-200 font-medium"
-              >
-                {item.label}
-              </motion.button>
-            ))}
-            <div className="flex items-center space-x-4 ml-4">
-              <motion.a
-                href="https://github.com/rgunasree"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-gray-300 hover:text-cyan-400 transition-colors"
-              >
-                <Github size={20} />
-              </motion.a>
-              <motion.a
-                href="https://www.linkedin.com/in/gunasree-r-55024224a/"
-                target="_blank"
-                rel="noopener noreferrer"
-                whileHover={{ scale: 1.1, rotate: -5 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-gray-300 hover:text-cyan-400 transition-colors"
-              >
-                <Linkedin size={20} />
-              </motion.a>
-              <motion.a
-                href="mailto:gunasreeer@gmail.com"
-                whileHover={{ scale: 1.1, rotate: 5 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-gray-300 hover:text-cyan-400 transition-colors"
-              >
-                <Mail size={20} />
-              </motion.a>
-            </div>
+            GUNASREE<span style={{ color: '#06b6d4' }}>.AI</span>
           </div>
 
-          <div className="md:hidden">
+          {/* Desktop nav */}
+          <div className="hidden md:flex items-center gap-8 h-full">
+            {navItems.map((item) => {
+              const isActive = activeSection === item.href.replace('#', '');
+              return (
+                <button
+                  key={item.href + item.label}
+                  onClick={() => scrollToSection(item.href)}
+                  className={`relative h-full text-xs tracking-widest transition-all duration-300 group ${
+                    isActive ? 'text-cyan-400' : 'text-gray-400 hover:text-white'
+                  }`}
+                  style={{ fontFamily: 'JetBrains Mono, monospace' }}
+                >
+                  {item.label}
+                  {/* Active Underline */}
+                  <span 
+                    className={`absolute bottom-0 left-0 w-full h-0.5 bg-cyan-500 transition-all duration-300 transform ${
+                      isActive ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0 group-hover:scale-x-50 group-hover:opacity-50'
+                    }`}
+                  />
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Right side: theme + download */}
+          <div className="hidden md:flex items-center gap-3">
             <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-300 hover:text-cyan-400 transition-colors"
+              className="text-gray-400 hover:text-cyan-500 transition-colors text-lg"
+              title="Toggle theme"
+              onClick={() => setIsDark(!isDark)}
             >
-              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {isDark ? '☀' : '🌙'}
             </button>
+            <a
+              href="/GUNASREE_R_RESUME.pdf"
+              download
+              className="inline-flex items-center justify-center px-4 py-2 text-xs font-bold rounded transition-all hover:bg-cyan-500 hover:text-black cursor-pointer"
+              style={{
+                background: 'rgba(6,182,212,0.1)',
+                border: '1px solid rgba(6,182,212,0.5)',
+                color: '#22d3ee',
+                fontFamily: 'JetBrains Mono, monospace',
+                letterSpacing: '0.05em',
+              }}
+            >
+              DOWNLOAD CV
+            </a>
           </div>
+
+          {/* Mobile hamburger */}
+          <button
+            className="md:hidden text-gray-300 hover:text-cyan-400 transition-colors text-2xl"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? '✕' : '☰'}
+          </button>
         </div>
       </div>
 
-      <AnimatePresence>
-        {isMobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-slate-900/95 backdrop-blur-md"
+      {/* Mobile menu */}
+      {isMobileMenuOpen && (
+        <div
+          className="md:hidden px-4 pb-4 pt-2 space-y-3"
+          style={{ background: 'rgba(5,5,5,0.97)', borderTop: '1px solid rgba(6,182,212,0.2)' }}
+        >
+          {navItems.map((item) => {
+            const isActive = activeSection === item.href.replace('#', '');
+            return (
+              <button
+                key={item.href + item.label}
+                onClick={() => scrollToSection(item.href)}
+                className={`block w-full text-left py-2 transition-colors text-xs tracking-widest ${
+                  isActive ? 'text-cyan-400 font-bold border-l-2 border-cyan-400 pl-2' : 'text-gray-300 hover:text-cyan-400'
+                }`}
+                style={{ fontFamily: 'JetBrains Mono, monospace' }}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+          <a
+            href="/GUNASREE_R_RESUME.pdf"
+            download
+            className="w-full inline-flex items-center justify-center py-2 text-xs font-bold rounded hover:bg-cyan-500 hover:text-black transition-colors"
+            style={{
+              background: 'rgba(6,182,212,0.1)',
+              border: '1px solid rgba(6,182,212,0.5)',
+              color: '#22d3ee',
+              fontFamily: 'JetBrains Mono, monospace',
+            }}
           >
-            <div className="px-4 pt-2 pb-4 space-y-3">
-              {navItems.map((item) => (
-                <button
-                  key={item.href}
-                  onClick={() => scrollToSection(item.href)}
-                  className="block w-full text-left text-gray-300 hover:text-cyan-400 py-2 transition-colors"
-                >
-                  {item.label}
-                </button>
-              ))}
-              <div className="flex items-center space-x-4 pt-4 border-t border-gray-700">
-                <a
-                  href="https://github.com/rgunasree"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-cyan-400"
-                >
-                  <Github size={20} />
-                </a>
-                <a
-                  href="https://www.linkedin.com/in/gunasree-r-55024224a/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-cyan-400"
-                >
-                  <Linkedin size={20} />
-                </a>
-                <a
-                  href="mailto:gunasreeer@gmail.com"
-                  className="text-gray-300 hover:text-cyan-400"
-                >
-                  <Mail size={20} />
-                </a>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.nav>
+            DOWNLOAD CV
+          </a>
+        </div>
+      )}
+    </nav>
   );
 }
