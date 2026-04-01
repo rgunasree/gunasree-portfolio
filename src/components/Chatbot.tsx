@@ -71,15 +71,17 @@ export default function Chatbot() {
                 - Google Cloud Gen AI Certified.
               - Education: B.Tech in IT (CGPA 8.1).
               - Personal & Hobbies: 
-                - High-energy extrovert who loves people and communication.
-                - Creative: Plays guitar and enjoys reading books.
-                - Disciplined: Journals daily and commits to a morning walk/jog every single day.
-                - Organized: Loves organizing her space to maintain a clear mind.
+                - Identity: A self-proclaimed "Techie Girl" and a dedicated "Nature Lover."
+                - Adventure: Loves adventure, trekking, and hiking. She activey seeks out adventurous spots wherever she travels.
+                - History & Culture: Fascinated by historical places and deeply cherishes diverse cultures.
+                - Creative: Plays guitar, reads, and follows a high-energy extroverted lifestyle.
+                - Disciplined: Journals daily and commits to an evening walk every single day.
+                - Growth Mindset: Passionate about exploring and learning—whether it's new technology, new places, or new life experiences.
                 - Interests: Huge fan of movies, series, and anime (a professional binge-watcher in her free time!).
               - Travel: Passionate explorer. Spent 4 months in Malaysia immersing herself in the culture, nature, and food (she documents these journeys on her Instagram logs).
               - Life Philosophy: Gunasree defines success not just by achievements, but by attaining a state of deep peace and happiness.
               
-              Tone: Professional yet warm, enthusiastic, and data-driven. Highlight her ability to bridge the gap between AI research and production engineering while maintaining a rich personal life. Keep answers short (under 3 sentences) unless asked for detail.
+              Tone: Professional yet warm, adventurous, and data-driven. Highlight her blend of technical expertise and her "nature lover" spirit. Keep answers short (under 3 sentences) unless asked for detail.
               
               User Question: ${userMessage}`
             }]
@@ -131,8 +133,8 @@ export default function Chatbot() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 20 }}
             className="fixed bottom-24 right-4 md:right-8 w-[90vw] md:w-96 h-[550px] max-h-[85vh] rounded-2xl flex flex-col overflow-hidden z-50 shadow-2xl font-inter"
-            style={{ 
-              background: '#0e1117', 
+            style={{
+              background: '#0e1117',
               border: '1px solid rgba(255, 255, 255, 0.1)',
               boxShadow: '0 10px 40px rgba(0,0,0,0.5)'
             }}
@@ -224,7 +226,7 @@ export default function Chatbot() {
                   disabled={!input.trim() || isLoading}
                   className="w-12 flex-shrink-0 flex items-center justify-center rounded-xl bg-cyan-400 text-black hover:bg-cyan-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed absolute right-1.5 top-1.5 bottom-1.5"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M12 5l7 7-7 7" /></svg>
                 </button>
               </div>
             </div>
@@ -248,7 +250,7 @@ export default function Chatbot() {
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
           className="relative w-16 h-16 rounded-full flex items-center justify-center shadow-2xl"
-          style={{ 
+          style={{
             background: 'linear-gradient(135deg, #a855f7 0%, #7e22ce 100%)',
             boxShadow: '0 0 0 8px rgba(168, 85, 247, 0.2)'
           }}
@@ -257,7 +259,7 @@ export default function Chatbot() {
             <X size={28} className="text-white" />
           ) : (
             <svg viewBox="0 0 24 24" fill="white" width="32" height="32">
-              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 6L8 9L9.5 13H14.5L16 9L12 6ZM8 15H16L12 18L8 15Z"/> 
+              <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 7.59 7.59 4 12 4C16.41 4 20 7.59 20 12C20 16.41 16.41 20 12 20ZM12 6L8 9L9.5 13H14.5L16 9L12 6ZM8 15H16L12 18L8 15Z" />
             </svg>
           )}
           {!isOpen && (
