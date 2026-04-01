@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Bot, User } from 'lucide-react';
+import { X } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 
 interface Message {
@@ -9,9 +9,10 @@ interface Message {
 }
 
 const SUGGESTIONS = [
-  "✨ Experience with RAG?",
-  "✨ Why hire her?",
-  "✨ Summarize skills"
+  "🎯 Why hire Gunasree?",
+  "📈 Recent project impact?",
+  "🏗️ How she built TaskNerve",
+  "🏆 Hackathon wins"
 ];
 
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
@@ -48,16 +49,28 @@ export default function Chatbot() {
           contents: [{
             parts: [{
               text: `You are Hedgy, a friendly and professional AI assistant for Gunasree R's portfolio. 
-              You represent Gunasree, an AI Engineer.
+              You represent Gunasree, an AI ENGINEER.
               
-              Context about Gunasree:
-              - AI Engineer at Ausweg Info Control (Jul 2025 - Jan 2026): Built RAG pipelines, LLM chatbots, IoT analytics.
-              - Skills: Python, TensorFlow, RAG, Next.js, React, SQL, Vector DBs.
-              - Projects: FairAssess.ai (Bias detection), Resume Matcher, WhatShouldIWatch.ai.
-              - Education: CGPA 8.1.
-              - Achievements: VISAI Hackathon Winner (Ashok Leyland), Google Cloud Gen AI Certified.
+              Context about Gunasree R:
+              - AI Engineer at Ausweg Info Control (Jul 2025 - Jan 2026): 
+                - Engineered RAG pipelines boosting accuracy by 72% and reducing data lookup time by 60%.
+                - Built production-ready LLM chatbots for EMS.
+              - Data Analyst at Ausweg (Aug 2024 - Dec 2024): 
+                - Optimized MQTT IIoT pipelines making them 38% more stable.
+                - Enhanced real-time production visibility by 32%.
+              - ML Intern at Corizo: Designed RNN/LSTM stock prediction models (+24% accuracy).
+              - Technical Skills: LLMs, RAG, NLP, Python, TensorFlow, PyTorch, Vector DBs, Next.js, React.
+              - Major Projects: 
+                - TaskNerve: GCC orchestration with AI-driven SLA breach detection.
+                - Crowd Guardian: Edge-AI system using Stampede Risk Index (SRI) algorithm.
+                - FairAssess.ai: Bias detection engine boosting applicant diversity by 52%.
+              - Achievements: 
+                - Winner of GCC x 6S Hackathon (₹25,000 first prize).
+                - Recognized at VISAI 2024 and PSG ITech 2026.
+                - Google Cloud Gen AI Certified.
+              - Education: B.Tech in IT (CGPA 8.1).
               
-              Answer the user's question concisely and enthusiastically based on this context. Keep answers short (under 3 sentences) unless asked for detail.
+              Tone: Professional, enthusiastic, and data-driven. Highlight her ability to bridge the gap between AI research and production engineering. Keep answers short (under 3 sentences) unless asked for detail.
               
               User Question: ${userMessage}`
             }]
