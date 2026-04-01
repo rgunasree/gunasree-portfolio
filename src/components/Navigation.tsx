@@ -89,10 +89,14 @@ export default function Navigation() {
             {navItems.map((item) => {
               const isActive = activeSection === item.href.replace('#', '');
               return (
-                <button
+                <a
                   key={item.href + item.label}
-                  onClick={() => scrollToSection(item.href)}
-                  className={`relative h-full text-xs tracking-widest transition-all duration-300 group ${
+                  href={item.href}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    scrollToSection(item.href);
+                  }}
+                  className={`relative h-full text-xs tracking-widest transition-all duration-300 group flex items-center ${
                     isActive ? 'text-cyan-400' : 'text-gray-400 hover:text-white'
                   }`}
                   style={{ fontFamily: 'JetBrains Mono, monospace' }}
@@ -104,7 +108,7 @@ export default function Navigation() {
                       isActive ? 'scale-x-100 opacity-100' : 'scale-x-0 opacity-0 group-hover:scale-x-50 group-hover:opacity-50'
                     }`}
                   />
-                </button>
+                </a>
               );
             })}
           </div>
@@ -153,16 +157,20 @@ export default function Navigation() {
           {navItems.map((item) => {
             const isActive = activeSection === item.href.replace('#', '');
             return (
-              <button
+              <a
                 key={item.href + item.label}
-                onClick={() => scrollToSection(item.href)}
+                href={item.href}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToSection(item.href);
+                }}
                 className={`block w-full text-left py-2 transition-colors text-xs tracking-widest ${
                   isActive ? 'text-cyan-400 font-bold border-l-2 border-cyan-400 pl-2' : 'text-gray-300 hover:text-cyan-400'
                 }`}
                 style={{ fontFamily: 'JetBrains Mono, monospace' }}
               >
                 {item.label}
-              </button>
+              </a>
             );
           })}
           <a

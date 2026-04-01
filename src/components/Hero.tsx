@@ -112,12 +112,12 @@ export default function Hero() {
       </h1>
 
       {/* Title */}
-      <p
+      <h2
         className="text-cyan-400 tracking-widest font-bold mb-8"
         style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '0.9rem', letterSpacing: '0.3em' }}
       >
         AI ENGINEER
-      </p>
+      </h2>
 
       {/* Bio terminal box */}
       <div
