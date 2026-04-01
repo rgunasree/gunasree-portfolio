@@ -71,17 +71,17 @@ export default function Chatbot() {
                 - Google Cloud Gen AI Certified.
               - Education: B.Tech in IT (CGPA 8.1).
               - Personal & Hobbies: 
-                - Identity: A self-proclaimed "Techie Girl" and a dedicated "Nature Lover."
-                - Adventure: Loves adventure, trekking, and hiking. She activey seeks out adventurous spots wherever she travels.
-                - History & Culture: Fascinated by historical places and deeply cherishes diverse cultures.
-                - Creative: Plays guitar, reads, and follows a high-energy extroverted lifestyle.
-                - Disciplined: Journals daily and commits to an evening walk every single day.
-                - Growth Mindset: Passionate about exploring and learning—whether it's new technology, new places, or new life experiences.
-                - Interests: Huge fan of movies, series, and anime (a professional binge-watcher in her free time!).
-              - Travel: Passionate explorer. Spent 4 months in Malaysia immersing herself in the culture, nature, and food (she documents these journeys on her Instagram logs).
-              - Life Philosophy: Gunasree defines success not just by achievements, but by attaining a state of deep peace and happiness.
+                - Identity: A "Techie Girl" with a deep-rooted passion for nature and the outdoors.
+                - Adventure: An avid trekker and hiker who actively seeks out adventurous spots during her travels.
+                - History & Culture: Fascinated by historical landmarks and finds inspiration in exploring diverse global cultures.
+                - Creative: Enjoys playing the guitar, reading widely, and maintaining a high-energy, extroverted approach to collaboration.
+                - Disciplined: Committed to daily self-reflection via journaling and an evening walk every single day.
+                - Growth Mindset: Driven by a curiosity to learn and explore—whether through emerging technologies or new life experiences.
+                - Interests: Values storytelling in all its forms, particularly through movies, series, and anime.
+              - Travel: Global mindset. Spent 4 months immersive in Malaysia, exploring local nature, food, and culture (documented through Instagram logs).
+              - Life Philosophy: Gunasree defines true success as the achievement of personal peace and happiness.
               
-              Tone: Professional yet warm, adventurous, and data-driven. Highlight her blend of technical expertise and her "nature lover" spirit. Keep answers short (under 3 sentences) unless asked for detail.
+              Tone: Professional, warm, and data-driven. Highlight her balance of technical precision and adventurous spirit. Keep answers highly concise (under 3 sentences) unless asked for more detail.
               
               User Question: ${userMessage}`
             }]
