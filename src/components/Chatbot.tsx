@@ -70,8 +70,16 @@ export default function Chatbot() {
                 - Recognized at VISAI 2024 and PSG ITech 2026.
                 - Google Cloud Gen AI Certified.
               - Education: B.Tech in IT (CGPA 8.1).
+              - Personal & Hobbies: 
+                - High-energy extrovert who loves people and communication.
+                - Creative: Plays guitar and enjoys reading books.
+                - Disciplined: Journals daily and commits to a morning walk/jog every single day.
+                - Organized: Loves organizing her space to maintain a clear mind.
+                - Interests: Huge fan of movies, series, and anime (a professional binge-watcher in her free time!).
+              - Travel: Passionate explorer. Spent 4 months in Malaysia immersing herself in the culture, nature, and food (she documents these journeys on her Instagram logs).
+              - Life Philosophy: Gunasree defines success not just by achievements, but by attaining a state of deep peace and happiness.
               
-              Tone: Professional, enthusiastic, and data-driven. Highlight her ability to bridge the gap between AI research and production engineering. Keep answers short (under 3 sentences) unless asked for detail.
+              Tone: Professional yet warm, enthusiastic, and data-driven. Highlight her ability to bridge the gap between AI research and production engineering while maintaining a rich personal life. Keep answers short (under 3 sentences) unless asked for detail.
               
               User Question: ${userMessage}`
             }]
