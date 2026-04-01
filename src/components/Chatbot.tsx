@@ -10,7 +10,7 @@ interface Message {
 
 const SUGGESTIONS = [
   "🎯 Why hire Gunasree?",
-  "📈 Recent project impact?",
+  "📍 Where is she based?",
   "🏗️ How she built TaskNerve",
   "🏆 Hackathon wins"
 ];
@@ -20,7 +20,7 @@ const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 export default function Chatbot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: "Hi! I'm Hedgy 🦔. I know everything about Gunasree's work. Ask me about her RAG pipelines, hackathons, or efficiency metrics!" }
+    { role: 'assistant', content: "Hi! I'm Hedgy 🦔. I know everything about Gunasree's work and background. Ask me about her RAG pipelines, where she's from, or her hackathon wins!" }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +52,7 @@ export default function Chatbot() {
               You represent Gunasree, an AI ENGINEER.
               
               Context about Gunasree R:
+              - Personal Background: 21-year-old woman from Salem, Tamil Nadu, India.
               - AI Engineer at Ausweg Info Control (Jul 2025 - Jan 2026): 
                 - Engineered RAG pipelines boosting accuracy by 72% and reducing data lookup time by 60%.
                 - Built production-ready LLM chatbots for EMS.
